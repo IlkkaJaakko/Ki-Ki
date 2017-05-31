@@ -1,3 +1,46 @@
 <resources>
     <string name="app_name">Ki-Ki</string>
+    <string name="title_activity_home_page">HomePageActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="button_sing_in_with_email">Email</string>
+
+    <string name="facebook_application_id" translatable="false">305714976550966</string>
+    <string name="facebook_login_protocol_scheme" translatable="false">fb305714976550966</string>
+    <string name="facebook_provider_id" translatable="false">facebook.com</string>
+    <string name="password_provider_id" translatable="false">password</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb305714976550966</string>
+    <string name="facebook_app_id" translatable="false">305714976550966</string>
+    <string name="progress_dialog_disconnecting">Disconnecting...</string>
+    <string name="progress_dialog_connecting">Connecting...</string>
+    <string name="facebook_connection_error">Error while connecting to Facebook</string>
+    <string name="facebook_connection_canceled">The connection to facebook has been cancelled</string>
+    <string name="unable_to_connect_to_server_facebook_error">Error while connection to Facebook server</string>
+    <string name="result_cancel">connection failed</string>
+    <string name="alertDialog_no_internet_connection">Please Check your connection internet</string>
+    <string name="google_firebase_provider_id">google.com</string>
+    <string name="Error_while_updating_user_profile_information">Error while set user profile</string>
+    <string name="problem_while_loading_user_data_not_identify">Identification failed</string>
+    <string name="title_community">Community</string>
+    <string name="title_myKiKi">My Ki-Ki</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="textView_mykiki_mydata">Personal Data</string>
+    <string name="button_weight_text">Weight</string>
+    <string name="button_size_text">Size</string>
+    <string name="button_gender_text">Gender</string>
+    <string name="button_age_text">Age</string>
+    <string name="textView_mykiki_myactivities">Activity Level</string>
+    <string name="textView_mykiki_myactivities_description">Select your current activity level</string>
+    <string name="activities_description_1">Light activity \n 1 to 3 days a week</string>
+    <string name="activities_description_2">Moderate activity \n 3 to 5 days a week</string>
+    <string name="activities_description_3">Heavy activity \n 6 to 7 days a week</string>
+    <string name="activities_description_4">Very heavy activity \n twice a day or more</string>
+    <string name="textView_mykiki_recommended_calories">Recommended daily calorie intake</string>
+    <string name="kilocalories">Kcal</string>
+
+
 </resources>
