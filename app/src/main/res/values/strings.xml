@@ -41,6 +41,52 @@
     <string name="activities_description_4">Very heavy activity \n twice a day or more</string>
     <string name="textView_mykiki_recommended_calories">Recommended daily calorie intake</string>
     <string name="kilocalories">Kcal</string>
+    <string name="button_logout">Logout</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="alertDialoglogout">Logout the user</string>
+
+    <string name="alertDialogverifyemail_title">Please verify your email address</string>
+    <string name="alertDialogverifyemail_message">Please verify your email address by clicking on the link send at</string>
+    <string name="button_continue">Continue</string>
+
+    <string name="problem_while_loading_user_data">A problem occured while loading your data. Please Make sure you have a stable internet connection then try to log in again</string>
+    <string name="problem_while_loading_user_data_auth_null">You signed out from your last session or did not signed up yet.</string>
+    <string name="problem_while_loading_user_data_verifaction_email_resent">We send you a link to verify your email at</string>
+    <string name="no_internet_app_not_properly_work">Some functions might not work properly</string>
+
+
+    <string name="email_verified_plesase_log_out">Have you verified your email yet but still receive this message?\n
+        \nPlease LOG OUT and then LOG IN back again not to receive this message anymore.\n\n
+        If you continue, you will receive a new verification email.</string>
+
+
+    //LaunchActivity
+
+
+    //HomePageActivity
+    <string name="connection_to_server_not_aviable">Your are offline. Please check your internet connection</string>
+
+
+
+    //InitialiserActivity
+
+
+    //FragmentHome
+    <string name="fragment_home_step_counter">Daily Step Counter</string>
+    <string name="fragment_home_water_intake">Daily Water Intake</string>
+
+    //FragmentmyKiki
+    <string name="setAge">Set</string>
+    <string name="isMale">Male</string>
+    <string name="isAFemale">Female</string>
+    <string name="unknown_unsername">Unknown</string>
+    <string name="to_maintain_weight">To Maintain Weight</string>
+    <string name="to_loose_weight">To Loose Weight</string>
+
+
+
+    //FragmentCommunity
+
 
 
 </resources>

@@ -28,6 +28,7 @@ import com.facebook.HttpMethod;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.firebase.client.Firebase;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ui.ResultCodes;
 import com.google.android.gms.auth.api.Auth;
@@ -37,6 +38,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -110,22 +113,6 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
                 .build();
 
 
-        if (haveNetworkConnection()){
-            if (isUserLogin()){
-                if (AccessToken.getCurrentAccessToken()!=null){
-                    procideForFacebook(auth.getCurrentUser(),auth.getCurrentUser().getPhotoUrl().toString());
-                }else if (auth.getCurrentUser().getProviderData().get(1).getProviderId().equals(getString(R.string.google_firebase_provider_id))
-                        || mGoogleApiClient.isConnected()){
-
-                    procideForFacebook(auth.getCurrentUser(),auth.getCurrentUser().getPhotoUrl().toString());
-
-
-                }else {
-                    procideForEmail(auth.getCurrentUser());
-
-                }
-            }
-        }
 
         sigm_in_email=(Button)findViewById(R.id.button_sing_in_with_email);
         sign_in_facebook=(LoginButton) findViewById(R.id.button_sign_in_with_facebook);
@@ -159,6 +146,31 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
         button_google.setOnClickListener(this);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        start();
+    }
+
+    private void start() {
+
+        if (haveNetworkConnection()){
+            if (isUserLogin()){
+                if (AccessToken.getCurrentAccessToken()!=null){
+                    procideForFacebook(auth.getCurrentUser(),auth.getCurrentUser().getPhotoUrl().toString());
+                }else if (auth.getCurrentUser().getProviderData().get(1).getProviderId().equals(getString(R.string.google_firebase_provider_id))
+                        || mGoogleApiClient.isConnected()){
+
+                    procideForFacebook(auth.getCurrentUser(),auth.getCurrentUser().getPhotoUrl().toString());
+
+
+                }else {
+                    procideForEmail(auth.getCurrentUser());
+
+                }
+            }
+        }
+    }
 
     @Override
     public void onClick(View view) {
@@ -512,15 +524,10 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
 
 
 
-    private void procideForEmail(FirebaseUser currentUser) {
-
-    }
-
-
     private void verifyMail(final FirebaseUser user) {
-/*
+
         final AlertDialog alertDialog =
-                new AlertDialog.Builder(LauncherActivity.this).setTitle(
+                new AlertDialog.Builder(LaunchActivity.this).setTitle(
                         getString(R.string.alertDialogverifyemail_title))
                         .setIcon(getResources().getDrawable(R.drawable.ic_warning_black_24dp))
                         .setMessage(getString(R.string.alertDialogverifyemail_message) +" " +user.getEmail()+"\n\n\n"+getString( R.string.email_verified_plesase_log_out)) .create();
@@ -546,7 +553,7 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
                                             LoginManager.getInstance().logOut();
                                             auth.signOut();
                                             userSharedPreference.clearUserData();
-                                            startActivity(new Intent(LauncherActivity.this,LauncherActivity.class)
+                                            startActivity(new Intent(LaunchActivity.this,LaunchActivity.class)
                                                     .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                                                             Intent.FLAG_ACTIVITY_CLEAR_TASK |
                                                             Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -564,7 +571,7 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
                         }else {
                             auth.signOut();
                             userSharedPreference.clearUserData();
-                            startActivity(new Intent(LauncherActivity.this,LauncherActivity.class)
+                            startActivity(new Intent(LaunchActivity.this,LaunchActivity.class)
                                     .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                                             Intent.FLAG_ACTIVITY_CLEAR_TASK |
                                             Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -604,11 +611,11 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
                 });
         alertDialog.setCancelable(false);
         alertDialog.show();
-        */
+
 
     }
 
-/*
+
     private void procideForEmail(final FirebaseUser user) {
         final DatabaseReference ref=FirebaseDatabase.getInstance().getReference()
                 .child(ConfigApp.FIREBASE_APP_URL_USERS).
@@ -619,8 +626,7 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 if (dataSnapshot.hasChildren()){
-                    userSharedPreference.setUserNumberofAds(dataSnapshot
-                            .child("numberOfAds").getValue(long.class));
+
 
                     userSharedPreference.storeUserData(dataSnapshot.getValue(UserPublic.class));
                     userSharedPreference.setUserLoggedIn(true);
@@ -628,28 +634,11 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
 
                     userSharedPreference.setEmailVerified(user.isEmailVerified());
 
+                    startActivity(new Intent(LaunchActivity.this,HomePageActivity.class)
+                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                    dismissProgressbar();
+                    finish();
 
-                    if (dataSnapshot.hasChild("Location")){
-
-                        Locations locations=dataSnapshot.child("Location")
-                                .getValue(Locations.class);
-                        userSharedPreference.storeUserLocation(locations.getName()
-                                , locations.getNumberLocation()
-                                ,locations.getNameCountry(),
-                                locations.getNumberCountry());
-                        startActivity(new Intent(LauncherActivity.this,CategoryActivity.class)
-                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                        dismissProgressbar();
-                        finish();
-
-                    }else {
-
-                        startActivity(new Intent(LauncherActivity.this,LocationsActivity.class)
-                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                        dismissProgressbar();
-                        finish();
-
-                    }
                 }else {
                     dismissProgressbar();
                     Toast.makeText(getApplicationContext()
@@ -670,7 +659,6 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
     }
 
 
-    */
     void removePermission(){
         dismissProgressbar();
         LoginManager.getInstance().logOut();

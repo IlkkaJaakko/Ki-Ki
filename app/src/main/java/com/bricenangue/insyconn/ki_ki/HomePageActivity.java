@@ -1,5 +1,11 @@
 package com.bricenangue.insyconn.ki_ki;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
@@ -8,20 +14,51 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class HomePageActivity extends AppCompatActivity {
+import com.facebook.AccessToken;
+import com.facebook.FacebookRequestError;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.facebook.login.LoginManager;
+import com.firebase.client.Firebase;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.internal.zzbnf;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+public class HomePageActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener
+       {
 
     private static final String SELECTED_ITEM = "arg_selected_item";
 
     private BottomNavigationView navigation;
     private int mSelectedItem;
+    private GoogleApiClient mGoogleApiClient;
+    private FirebaseAuth auth;
+    private ProgressDialog progressBar;
 
 
+    public boolean haveNetworkConnection() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null;
+    }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -34,6 +71,8 @@ public class HomePageActivity extends AppCompatActivity {
         }
 
     };
+    private UserSharedPreference userSharedPreference;
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,15 +82,29 @@ public class HomePageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
 
+
+        userSharedPreference=new UserSharedPreference(this);
+        auth= FirebaseAuth.getInstance();
+        if (auth != null){
+            user =auth.getCurrentUser();
+        }
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         MenuItem selectedItem;
         if (savedInstanceState != null) {
             mSelectedItem = savedInstanceState.getInt(SELECTED_ITEM, 0);
-            selectedItem = navigation.getMenu().findItem(mSelectedItem);
+            selectedItem = navigation.getMenu().findItem(mSelectedItem).setChecked(true);
         } else {
-            selectedItem = navigation.getMenu().getItem(0);
+            selectedItem = navigation.getMenu().getItem(0).setChecked(true);
         }
         selectFragment(selectedItem);
 
@@ -61,6 +114,7 @@ public class HomePageActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(SELECTED_ITEM, mSelectedItem);
+
         super.onSaveInstanceState(outState);
     }
 
@@ -100,6 +154,183 @@ public class HomePageActivity extends AppCompatActivity {
             transaction.commit();
         }
     }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main,menu);
+
+
+        return super.onCreateOptionsMenu(menu);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_logout:
+                if (!haveNetworkConnection()){
+                    Toast.makeText(getApplicationContext(),getString(R.string.connection_to_server_not_aviable)
+                            ,Toast.LENGTH_SHORT).show();
+                }else {
+                    loggout();
+                }
+
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
+
+    private void loggout() {
+
+        final AlertDialog alertDialog =
+                new AlertDialog.Builder(HomePageActivity.this)
+                        .setIcon(getResources().getDrawable(R.drawable.ic_power_settings_new_black_24dp))
+                        .setMessage(
+                                getString(R.string.alertDialoglogout)+" " +user.getEmail())
+                        .create();
+        alertDialog.setButton(DialogInterface.BUTTON_NEUTRAL, getString(R.string.button_cancel)
+                , new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        alertDialog.dismiss();
+
+                    }
+
+                });
+        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.button_logout)
+                , new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        showLogoutProgressbar();
+
+                        if (AccessToken.getCurrentAccessToken()!=null){
+
+                            GraphRequest delPermRequest = new GraphRequest(AccessToken.getCurrentAccessToken()
+                                    , "/"+user.getProviderData().get(1).getUid()+"/permissions/", null, HttpMethod.DELETE, new GraphRequest.Callback() {
+                                @Override
+                                public void onCompleted(GraphResponse graphResponse) {
+                                    if(graphResponse!=null){
+                                        FacebookRequestError error =graphResponse.getError();
+                                        if(error!=null){
+                                            //Log.e(TAG, error.toString());
+                                            dismissProgressbar();
+                                            Toast.makeText(getApplicationContext(),error.toString(),Toast.LENGTH_LONG).show();
+                                        }else {
+                                            LoginManager.getInstance().logOut();
+                                            auth.signOut();
+                                            userSharedPreference.clearUserData();
+                                            startActivity(new Intent(HomePageActivity.this,LaunchActivity.class)
+                                                    .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                                                            Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                                                            Intent.FLAG_ACTIVITY_NEW_TASK)
+                                            );
+                                            Firebase.goOffline();
+                                            dismissProgressbar();
+                                            finish();
+
+                                        }
+                                    }
+                                }
+                            });
+                            // Log.d(TAG,"Executing revoke permissions with graph path" + delPermRequest.getGraphPath());
+                            delPermRequest.executeAsync();
+                        } else if (auth.getCurrentUser().getProviderData().get(1).getProviderId()
+                                .equals(getString(R.string.google_firebase_provider_id))
+                                || mGoogleApiClient.isConnected()){
+
+                            signOut();
+                            revokeAccess();
+                            userSharedPreference.clearUserData();
+                            startActivity(new Intent(HomePageActivity.this,LaunchActivity.class)
+                                    .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                                            Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                                            Intent.FLAG_ACTIVITY_NEW_TASK)
+                            );
+                            Firebase.goOffline();
+                            dismissProgressbar();
+                            finish();
+
+                        }else {
+                            auth.signOut();
+                            userSharedPreference.clearUserData();
+                            startActivity(new Intent(HomePageActivity.this,LaunchActivity.class)
+                                    .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                                            Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                                            Intent.FLAG_ACTIVITY_NEW_TASK)
+                            );
+                            Firebase.goOffline();
+                            dismissProgressbar();
+                            finish();
+
+
+                        }
+                    }
+                });
+        alertDialog.setCancelable(false);
+        alertDialog.show();
+
+    }
+
+    private void signOut() {
+        // Firebase sign out
+        auth.signOut();
+
+        // Google sign out
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(@NonNull Status status) {
+//                        updateUI(null);
+                    }
+                });
+    }
+
+    // to disconnect from google
+    private void revokeAccess() {
+        // Firebase sign out
+        auth.signOut();
+
+        // Google revoke access
+        Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(@NonNull Status status) {
+//                        updateUI(null);
+                    }
+                });
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        dismissProgressbar();
+        Toast.makeText(getApplicationContext(),connectionResult.getErrorMessage(),Toast.LENGTH_SHORT).show();
+    }
+
+    private void showProgressbar(){
+        progressBar = new ProgressDialog(this);
+        progressBar.setCancelable(false);
+        progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressBar.setMessage(getString(R.string.progress_dialog_connecting));
+        progressBar.show();
+    }
+
+    private void showLogoutProgressbar(){
+        progressBar = new ProgressDialog(this);
+        progressBar.setCancelable(false);
+        progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressBar.setMessage(getString(R.string.progress_dialog_disconnecting));
+        progressBar.show();
+    }
+
+    private void dismissProgressbar(){
+        if (progressBar!=null){
+            progressBar.dismiss();
+        }
+    }
+
 
 }
 

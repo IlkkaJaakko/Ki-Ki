@@ -146,4 +146,32 @@ public class ConfigApp {
         activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
     }
 
+
+    public static double calcuteBMR(double size, double age, double weight, boolean gender, int level ){
+        double activity_level=0;
+        switch (level){
+            case 1:
+                activity_level=1.5;
+                break;
+            case 2:
+                activity_level=1.7;
+                break;
+            case 3:
+                activity_level=1.9;
+                break;
+            case 4:
+                activity_level=2.4;
+                break;
+            default:
+                activity_level= 0.95;
+
+        }
+        double BMR = 0;
+        if (gender){
+            BMR = (655 + (9.5 * weight) + (1.9 * size) - (4.7 * age))* activity_level ;
+        }else {
+            BMR = (66 + (13.8 * weight) + (5.0 * size) - (6.8 * age)) * activity_level;
+        }
+        return BMR;
+    }
 }
