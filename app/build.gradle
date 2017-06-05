@@ -61,6 +61,7 @@ dependencies {
     compile 'com.android.support:support-vector-drawable:25.1.1'
     compile 'com.google.firebase:firebase-auth:10.0.1'
     compile 'com.google.android.gms:play-services-auth:10.0.1'
+    compile 'com.google.android.gms:play-services-fitness:10.0.1'
     compile 'com.facebook.android:facebook-android-sdk:4.14.0'
     compile 'com.google.firebase:firebase-database:10.0.1'
     compile 'com.google.firebase:firebase-messaging:10.0.1'
@@ -70,5 +71,6 @@ dependencies {
     compile 'com.github.Mariovc:ImagePicker:1.0.4'
     compile 'com.github.lopspower:CircularImageView:3.0.0'
     testCompile 'junit:junit:4.12'
+    compile 'com.android.support:multidex:1.0.0'
 }
 apply plugin: 'com.google.gms.google-services'

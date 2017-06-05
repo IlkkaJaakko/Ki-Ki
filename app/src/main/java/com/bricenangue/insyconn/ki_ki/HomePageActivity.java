@@ -7,21 +7,21 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.annotation.ColorRes;
+
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
+
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.TextView;
+
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -37,12 +37,43 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.internal.zzbnf;
+
+import com.google.android.gms.fitness.HistoryApi;
+import com.google.android.gms.fitness.data.DataPoint;
+import com.google.android.gms.fitness.data.DataSource;
+import com.google.android.gms.fitness.data.Value;
+import com.google.android.gms.fitness.request.DataReadRequest;
+import com.google.android.gms.fitness.request.DataSourcesRequest;
+import com.google.android.gms.fitness.request.OnDataPointListener;
+import com.google.android.gms.fitness.request.SensorRequest;
+import com.google.android.gms.fitness.result.DataReadResult;
+import com.google.android.gms.fitness.result.DataSourcesResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
+import com.google.android.gms.common.Scopes;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.Scope;
 
-public class HomePageActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener
-       {
+import com.google.android.gms.fitness.Fitness;
+import com.google.android.gms.fitness.FitnessStatusCodes;
+import com.google.android.gms.fitness.data.DataSet;
+import com.google.android.gms.fitness.data.DataType;
+import com.google.android.gms.fitness.data.Field;
+import com.google.android.gms.fitness.result.DailyTotalResult;
+
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.LogRecord;
+
+import static com.google.android.gms.fitness.data.DataType.TYPE_STEP_COUNT_DELTA;
+import static com.google.android.gms.fitness.data.Field.FIELD_STEPS;
+import static java.util.concurrent.TimeUnit.SECONDS;
+
+
+public class HomePageActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private static final String SELECTED_ITEM = "arg_selected_item";
 
@@ -51,6 +82,8 @@ public class HomePageActivity extends AppCompatActivity implements GoogleApiClie
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth auth;
     private ProgressDialog progressBar;
+    private Fragment selectedFragment= null;
+    private static final String TAG = "HomePageActivity";
 
 
     public boolean haveNetworkConnection() {
@@ -96,6 +129,8 @@ public class HomePageActivity extends AppCompatActivity implements GoogleApiClie
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
+
+        mGoogleApiClient.connect();
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
@@ -131,7 +166,7 @@ public class HomePageActivity extends AppCompatActivity implements GoogleApiClie
     }
 
     private void selectFragment(MenuItem item) {
-        Fragment selectedFragment= null;
+
         switch (item.getItemId()) {
             case R.id.navigation_home:
                 selectedFragment=FragmentHome.newInstance();
@@ -299,14 +334,21 @@ public class HomePageActivity extends AppCompatActivity implements GoogleApiClie
                     @Override
                     public void onResult(@NonNull Status status) {
 //                        updateUI(null);
+                        Toast.makeText(getApplicationContext(),status.getStatusMessage(),Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
     @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+    public void onConnectionFailed(@NonNull ConnectionResult result) {
         dismissProgressbar();
-        Toast.makeText(getApplicationContext(),connectionResult.getErrorMessage(),Toast.LENGTH_SHORT).show();
+        Log.w(TAG, "Google Play services connection failed. Cause: " +
+                result.toString());
+        Snackbar.make(
+                HomePageActivity.this.findViewById(R.id.container),
+                "Exception while connecting to Google Play services: " +
+                        result.getErrorMessage(),
+                Snackbar.LENGTH_INDEFINITE).show();
     }
 
     private void showProgressbar(){
@@ -330,7 +372,6 @@ public class HomePageActivity extends AppCompatActivity implements GoogleApiClie
             progressBar.dismiss();
         }
     }
-
 
 }
 

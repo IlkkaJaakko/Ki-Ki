@@ -82,7 +82,20 @@
     <string name="unknown_unsername">Unknown</string>
     <string name="to_maintain_weight">To Maintain Weight</string>
     <string name="to_loose_weight">To Loose Weight</string>
-
+    <string name="settings">Settings</string>
+    <string name="permission_denied_explanation">Permission denied</string>
+    <string name="ok">Ok</string>
+    <string name="permission_rationale">Permission Rational</string>
+    <string name="fragment_home_diet_plan">Diet Plan</string>
+    <string name="fragment_home_diet_plan_summary"><u>Today\'s Overview</u></string>
+    <string name="zero_glas_of_water">00</string>
+    <string name="fragment_home_diet_plan_carb">Carb</string>
+    <string name="fragment_home_diet_plan_fat">Fat</string>
+    <string name="fragment_home_diet_plan_protein">Protein</string>
+    <string name="fragment_home_diet_plan_nect_meal"><u>Next Meal</u></string>
+    <string name="fragment_home_diet_plan_view_full_plan">View Full Diet Plan</string>
+    <string name="fragment_community_btn_like">Like</string>
+    <string name="fragment_community_btn_comment">Comment</string>
 
 
     //FragmentCommunity

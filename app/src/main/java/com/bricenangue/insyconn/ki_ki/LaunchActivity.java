@@ -131,12 +131,14 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
 
             @Override
             public void onCancel() {
+                dismissProgressbar();
                 removePermission();
                 Toast.makeText(getApplicationContext(), getString(R.string.facebook_connection_canceled),Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onError(FacebookException error) {
+                dismissProgressbar();
                 removePermission();
                 Toast.makeText(getApplicationContext(), getString(R.string.facebook_connection_error),Toast.LENGTH_LONG).show();
             }
@@ -229,6 +231,7 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
         Toast.makeText(getApplicationContext(),connectionResult.getErrorMessage(),Toast.LENGTH_SHORT).show();
+        dismissProgressbar();
     }
 
     private void handleSignInResult(GoogleSignInResult result) {
@@ -240,6 +243,7 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
 //            updateUI(true);
         } else {
             Toast.makeText(getApplicationContext(),result.getStatus().toString(),Toast.LENGTH_SHORT).show();
+            dismissProgressbar();
 
             // Signed out, show unauthenticated UI.
 //            updateUI(false);
@@ -254,6 +258,7 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
                 if (!task.isSuccessful()){
                     Toast.makeText(getApplicationContext(), "Authentication failed.",
                             Toast.LENGTH_SHORT).show();
+                    dismissProgressbar();
                 }else {
                     loginUserGoogle(acct);
                 }
