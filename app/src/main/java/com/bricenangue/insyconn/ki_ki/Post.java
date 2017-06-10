@@ -11,16 +11,43 @@ public class Post {
     private String creator_id;
     private String creator_name;
     private String create_pic_URL;
+    private String postUniqueId;
 
     public Post() {
     }
 
-    public String getPictureURL() {
+    public String getText() {
+        return text;
+    }
+
+    public Post(String text, String pictureUrl, long timeofCreation, String creator_id, String creator_name, String create_pic_URL, String postUniqueId) {
+        this.text = text;
+        this.pictureUrl = pictureUrl;
+        this.timeofCreation = timeofCreation;
+        this.creator_id = creator_id;
+        this.creator_name = creator_name;
+        this.create_pic_URL = create_pic_URL;
+        this.postUniqueId = postUniqueId;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public String getPictureUrl() {
         return pictureUrl;
     }
 
-    public void setPictureURL(String pictureURL) {
-        this.pictureUrl = pictureURL;
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
+    }
+
+    public long getTimeofCreation() {
+        return timeofCreation;
+    }
+
+    public void setTimeofCreation(long timeofCreation) {
+        this.timeofCreation = timeofCreation;
     }
 
     public String getCreator_id() {
@@ -39,27 +66,19 @@ public class Post {
         this.creator_name = creator_name;
     }
 
-    public String getCreator_pic_URL() {
+    public String getCreate_pic_URL() {
         return create_pic_URL;
     }
 
-    public void setCreator_pic_URL(String creator_pic_URL) {
-        this.create_pic_URL = creator_pic_URL;
+    public void setCreate_pic_URL(String create_pic_URL) {
+        this.create_pic_URL = create_pic_URL;
     }
 
-    public String getText() {
-        return text;
+    public String getPostUniqueId() {
+        return postUniqueId;
     }
 
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public long getTimeofCreation() {
-        return timeofCreation;
-    }
-
-    public void setTimeofCreation(long timeofCreation) {
-        this.timeofCreation = timeofCreation;
+    public void setPostUniqueId(String postUniqueId) {
+        this.postUniqueId = postUniqueId;
     }
 }

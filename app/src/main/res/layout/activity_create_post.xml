@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.bricenangue.insyconn.ki_ki.CreatePostActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/create_post_relative_layout_picture"
+        android:layout_above="@+id/editText_layout_text_post">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/create_post_imageView"
+           android:scaleType="centerInside"/>
+
+        <ImageButton
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/add_picture_icon"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
+            android:layout_centerInParent="true"
+            android:id="@+id/create_post_imageBtnPickker"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey_light"
+            android:layout_below="@+id/create_post_imageView"/>
+
+    </RelativeLayout>
+
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText_layout_text_post"
+        android:layout_above="@+id/button_post">
+        <EditText
+            android:id="@+id/editText_description_post"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:inputType="text"
+            android:ems="10"
+            android:hint="@string/create_post_hint_description"
+            />
+    </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:id="@+id/button_post"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp"
+        style="@style/button"
+        android:background="@color/colorAccent"
+        android:text="@string/create_post_button_text"
+        android:elevation="2dp"
+        android:onClick="ButtonCreatePostClicked"/>
+
+
+</RelativeLayout>

@@ -56,7 +56,7 @@ public class FragmentMyKiKi extends Fragment implements View.OnClickListener
     private FirebaseUser user;
     private FirebaseAuth auth;
     private ProgressDialog progressBar;
-    private double  size=0, weight =0;
+    private double  size=0.00, weight =0.00;
     private boolean gender; // true for female , false for male
     private int level, age=0;
     private UserPersonalData userPersonalData;
@@ -171,6 +171,84 @@ public class FragmentMyKiKi extends Fragment implements View.OnClickListener
         }
     }
 
+    private void initializedUserdata(){
+
+        userPersonalData= userSharedPreference.getPersonalData();
+
+        DatabaseReference refUser= FirebaseDatabase.getInstance().getReference()
+                .child("UserPersonalData")
+                .child(user.getUid());
+
+            if (userPersonalData.getAge()==0 || userPersonalData.getSize() ==0 ){
+
+                // check on the server set all default
+                refUser.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot!=null){
+                            level = dataSnapshot.child("activity_level").getValue(Integer.class);
+                            age = dataSnapshot.child("age").getValue(Integer.class);
+                            gender = dataSnapshot.child("gender").getValue(Boolean.class);
+                            size = dataSnapshot.child("size").getValue(Double.class);
+                            weight = dataSnapshot.child("activity_level").getValue(Double.class);
+
+                            userPersonalData.setActivity_level(level);
+                            userPersonalData.setGender(gender);
+                            userPersonalData.setAge(age);
+                            userPersonalData.setWeight(weight);
+                            userPersonalData.setSize(size);
+
+                            setButtonsText(gender,weight,size,age,level);
+
+
+                        }else {
+                            //  set all default
+                            btn_Activity_4.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_lifting_grey));
+                            btn_Activity_3.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_runner_grey));
+                            btn_Activity_2.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_squat_grey));
+                            btn_Activity_1.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_walking_grey));
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+
+            }else {
+
+                gender=userPersonalData.isGender();
+                size =userPersonalData.getSize();
+                weight = userPersonalData.getWeight();
+                age = userPersonalData.getAge();
+                level=userPersonalData.getActivity_level();
+
+                setButtonsText(gender,weight,size,age,level);
+
+            }
+
+
+    }
+
+    private void setButtonsText (boolean gender, double weight, double size, int age, int level){
+        btn_size.setText(String.valueOf(size)+ " cm");
+        btn_weight.setText(String.valueOf(weight)+ " Kg");
+        btn_age.setText(String.valueOf(age)+ " ans");
+        if (gender){
+            // it is a female
+            btn_gender.setText(getString(R.string.isAFemale));
+
+        }else {
+            // it is a male
+            btn_gender.setText(getString(R.string.isMale));
+        }
+        markAsSelected(level);
+
+    }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -190,6 +268,7 @@ public class FragmentMyKiKi extends Fragment implements View.OnClickListener
             }
         });
 
+
         refUser.child("profilePhotoUri").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -201,38 +280,7 @@ public class FragmentMyKiKi extends Fragment implements View.OnClickListener
                 //username.setText(getString(R.string.unknown_unsername));
             }
         });
-
-
-        userPersonalData= userSharedPreference.getPersonalData();
-        if (userPersonalData.getAge()==0 || userPersonalData.getSize() ==0 ){
-            //set all default
-            btn_Activity_4.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_lifting_grey));
-            btn_Activity_3.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_runner_grey));
-            btn_Activity_2.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_squat_grey));
-            btn_Activity_1.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_walking_grey));
-
-        }else {
-
-            gender=userPersonalData.isGender();
-            size =userPersonalData.getSize();
-            weight = userPersonalData.getWeight();
-            age = userPersonalData.getAge();
-            level=userPersonalData.getActivity_level();
-
-            btn_size.setText(String.valueOf(size)+ " cm");
-            btn_weight.setText(String.valueOf(weight)+ " Kg");
-            btn_age.setText(String.valueOf(age)+ " ans");
-            if (gender){
-                // it is a female
-                btn_gender.setText(getString(R.string.isAFemale));
-
-            }else {
-                // it is a male
-                btn_gender.setText(getString(R.string.isMale));
-            }
-            markAsSelected(level);
-
-        }
+        initializedUserdata();
 
     }
 
@@ -361,6 +409,11 @@ public class FragmentMyKiKi extends Fragment implements View.OnClickListener
                 activity_level= 0.95;
 
         }
+        /**
+         * Frau: 655 + (9,5 x Gewicht in kg) + (1,9 x Größe in cm) – (4,7 x Alter in Jahren)
+
+         Mann: 66 + (13,8 x Gewicht in kg) + (5,0 x Größe in cm) – (6,8 x Alter in Jahren)
+         */
         double BMR = 0;
         if (gender){
             BMR = (655 + (9.5 * weight) + (1.9 * size) - (4.7 * age))* activity_level ;
@@ -491,11 +544,11 @@ public class FragmentMyKiKi extends Fragment implements View.OnClickListener
         int current_month = myCalendar.get(Calendar.MONTH);
         int current_day = myCalendar.get(Calendar.DAY_OF_MONTH);
 
-        if ((12-current_month) > month){
+        if ((current_month + 1) > (month+1)){
             age =current_year - year - 1;
-        }else if ((12-current_month) < month){
+        }else if ((current_month +1) < (month+1)){
             age = current_year - year;
-        }else if ((12 -current_year) == month){
+        }else if ((current_month +1) == (month+1)){
             if (current_day >= day){
                 age=current_year - year;
             }else {

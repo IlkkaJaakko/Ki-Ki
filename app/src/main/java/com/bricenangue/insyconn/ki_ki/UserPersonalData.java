@@ -5,7 +5,7 @@ package com.bricenangue.insyconn.ki_ki;
  */
 
 public class UserPersonalData {
-    private float size, weight;
+    private double size, weight;
     private int age, activity_level;
     private boolean gender;
 
@@ -14,7 +14,7 @@ public class UserPersonalData {
 
     }
 
-    public UserPersonalData(float size, float weight, int age, int activity_level, boolean gender) {
+    public UserPersonalData(double size, double weight, int age, int activity_level, boolean gender) {
         this.size = size;
         this.weight = weight;
         this.age = age;
@@ -22,19 +22,19 @@ public class UserPersonalData {
         this.gender = gender;
     }
 
-    public float getSize() {
+    public double getSize() {
         return size;
     }
 
-    public void setSize(float size) {
+    public void setSize(double size) {
         this.size = size;
     }
 
-    public float getWeight() {
+    public double getWeight() {
         return weight;
     }
 
-    public void setWeight(float weight) {
+    public void setWeight(double weight) {
         this.weight = weight;
     }
 

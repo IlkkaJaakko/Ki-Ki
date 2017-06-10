@@ -67,13 +67,20 @@
     <string name="connection_to_server_not_aviable">Your are offline. Please check your internet connection</string>
 
 
-
     //InitialiserActivity
 
 
     //FragmentHome
     <string name="fragment_home_step_counter">Daily Step Counter</string>
     <string name="fragment_home_water_intake">Daily Water Intake</string>
+    <string name="fragment_home_diet_plan">Diet Plan</string>
+    <string name="fragment_home_diet_plan_summary"><u>Today\'s Overview</u></string>
+    <string name="zero_glas_of_water">00</string>
+    <string name="fragment_home_diet_plan_carb">Carb</string>
+    <string name="fragment_home_diet_plan_fat">Fat</string>
+    <string name="fragment_home_diet_plan_protein">Protein</string>
+    <string name="fragment_home_diet_plan_nect_meal"><u>Next Meal</u></string>
+    <string name="fragment_home_diet_plan_view_full_plan">View Full Diet Plan</string>
 
     //FragmentmyKiki
     <string name="setAge">Set</string>
@@ -86,20 +93,40 @@
     <string name="permission_denied_explanation">Permission denied</string>
     <string name="ok">Ok</string>
     <string name="permission_rationale">Permission Rational</string>
-    <string name="fragment_home_diet_plan">Diet Plan</string>
-    <string name="fragment_home_diet_plan_summary"><u>Today\'s Overview</u></string>
-    <string name="zero_glas_of_water">00</string>
-    <string name="fragment_home_diet_plan_carb">Carb</string>
-    <string name="fragment_home_diet_plan_fat">Fat</string>
-    <string name="fragment_home_diet_plan_protein">Protein</string>
-    <string name="fragment_home_diet_plan_nect_meal"><u>Next Meal</u></string>
-    <string name="fragment_home_diet_plan_view_full_plan">View Full Diet Plan</string>
-    <string name="fragment_community_btn_like">Like</string>
-    <string name="fragment_community_btn_comment">Comment</string>
+
+
+    //CreatePostActivity
+    <string name="create_post_hint_description">What\'s on your mind</string>
+    <string name="create_post_button_text">Post</string>
 
 
     //FragmentCommunity
+    <string name="fragment_community_btn_like">Like</string>
+    <string name="fragment_community_btn_comment">Comment</string>
+    <string name="Unknown_user">Unknown</string>
 
+    //CheckTimeStamp
+    <string name="today">today</string>
+    <string name="yesterday">yesterday</string>
+    <string name="two_days_ago">two days ago</string>
+    <string name="three_days_ago">3 days ago</string>
+    <string name="four_days_ago">4 days ago</string>
+    <string name="five_days_ago">5 days ago</string>
+    <string name="six_days_ago">6 days ago</string>
+    <string name="a_week_ago">1 week ago</string>
+    <string name="eight_days_ago">8 days ago</string>
+    <string name="nine_days_ago">9 days ago</string>
+    <string name="ten_days_ago">10 days ago</string>
+    <string name="eleven_days_ago">11 days ago</string>
+    <string name="twelve_days_ago">12 days ago</string>
+    <string name="thirteen_days_ago">13 days ago</string>
+    <string name="two_weeks_ago">2 weeks ago</string>
+    <string name="three_weeks_ago">3 weeks ago</string>
+    <string name="one_month_ago">1 month ago</string>
+    <string name="two_months_ago">2 months ago</string>
+    <string name="imagepicker_title">Choose or Take a picture</string>
+    <string name="button_delete">Delete</string>
+    <string name="button_edit">Edit</string>
 
 
 </resources>

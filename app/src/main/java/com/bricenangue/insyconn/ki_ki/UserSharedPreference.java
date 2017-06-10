@@ -79,20 +79,21 @@ public class UserSharedPreference {
     }
 
 
+
     public void storePersonalData(UserPersonalData userPersonalData){
         SharedPreferences.Editor spEditor=userLocalDataBase.edit();
-        spEditor.putFloat("size",userPersonalData.getSize());
+        spEditor.putLong("size",Double.doubleToRawLongBits(userPersonalData.getSize()));
         spEditor.putInt("age",userPersonalData.getAge());
         spEditor.putInt("activity_level",userPersonalData.getActivity_level());
-        spEditor.putFloat("weight",userPersonalData.getWeight());
+        spEditor.putLong("weight",Double.doubleToRawLongBits(userPersonalData.getWeight()));
         spEditor.putBoolean("gender",userPersonalData.isGender());
 
         spEditor.apply();
     }
 
     public UserPersonalData getPersonalData(){
-        float size=userLocalDataBase.getFloat("size", 0);
-        float weight=userLocalDataBase.getFloat("weight",0);
+        double size = Double.longBitsToDouble(userLocalDataBase.getLong("size", Double.doubleToLongBits(0.00)));
+        double weight = Double.longBitsToDouble(userLocalDataBase.getLong("weight",Double.doubleToLongBits(0.00)));
         int age=userLocalDataBase.getInt("age", 0);
         int activity_level=userLocalDataBase.getInt("activity_level",0);
         boolean gender=userLocalDataBase.getBoolean("gender", false);

@@ -20,7 +20,8 @@
             <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/recyclerview_fragment_community"/>
+                android:id="@+id/recyclerview_fragment_community"
+                android:background="@color/grey_light"/>
 
 
         </RelativeLayout>

@@ -12,9 +12,11 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -29,6 +31,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -50,6 +54,8 @@ public class FragmentCommunity extends Fragment implements SwipeRefreshLayout.On
 
     private UserSharedPreference userSharedPreference;
 
+    private ImageLoader imageLoader;
+    private DisplayImageOptions options;
     public boolean haveNetworkConnection() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -62,6 +68,7 @@ public class FragmentCommunity extends Fragment implements SwipeRefreshLayout.On
     private FirebaseAuth auth;
     private FirebaseUser user;
 
+    private PopupMenu popupMenu;
     public FragmentCommunity() {
         // Required empty public constructor
     }
@@ -75,6 +82,13 @@ public class FragmentCommunity extends Fragment implements SwipeRefreshLayout.On
             user=auth.getCurrentUser();
         }
 
+        imageLoader=ImageLoader.getInstance();
+        options = new DisplayImageOptions.Builder().cacheInMemory(true)
+                .cacheOnDisc(true).resetViewBeforeLoading(true)
+               // .showImageForEmptyUri(fallback)
+                // .showImageOnFail(fallback)
+               // .showImageOnLoading(fallback)
+                .build();
 
 
     }
@@ -97,14 +111,16 @@ public class FragmentCommunity extends Fragment implements SwipeRefreshLayout.On
         fabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //start activity create a post
+                startActivity(new Intent(getActivity(),CreatePostActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 
             }
         });
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
-        recyclerView.setHasFixedSize(true);
+        recyclerView.setHasFixedSize(false);
         recyclerView.setLayoutManager(layoutManager);
 
         return view;
@@ -120,6 +136,7 @@ public class FragmentCommunity extends Fragment implements SwipeRefreshLayout.On
     @Override
     public void onRefresh() {
         //refresh layout here
+        refreshLayout.setRefreshing(true);
         final Query reference= FirebaseDatabase.getInstance().getReference().child("Posts");
 
         FirebaseRecyclerAdapter<Post,PostViewHolder> adapter=
@@ -148,35 +165,20 @@ public class FragmentCommunity extends Fragment implements SwipeRefreshLayout.On
                                 viewHolder.text.setText(model.getText());
                             }
 
-                            if(model.getPictureURL()!=null){
-
-                                viewHolder.postPicture.setVisibility(View.VISIBLE);
-                                Picasso.with(getContext()).load(model.getPictureURL()).networkPolicy(NetworkPolicy.OFFLINE)
-                                        .fit().centerInside()
-                                        .into(viewHolder.postPicture, new Callback() {
-                                            @Override
-                                            public void onSuccess() {
-
-                                                refreshLayout.setRefreshing(false);
-                                            }
-
-                                            @Override
-                                            public void onError() {
-                                                Picasso.with(getContext()).load(model.getPictureURL())
-                                                        .fit().centerInside().into(viewHolder.postPicture);
-                                                refreshLayout.setRefreshing(false);
-                                            }
-                                        });
-
-
+                            if (model.getCreator_name()!=null){
+                                viewHolder.username.setText(model.getCreator_name());
                             }else {
-
+                                viewHolder.username.setText(getString(R.string.Unknown_user));
+                            }
+                            if (model.getPictureUrl()!=null){
+                                viewHolder.postPicture.setVisibility(View.VISIBLE);
+                                imageLoader.displayImage(model.getPictureUrl(), viewHolder.postPicture,options);
+                            }else {
                                 viewHolder.postPicture.setVisibility(View.GONE);
-
                             }
 
-                        if(model.getCreator_pic_URL()!=null){
-                            Picasso.with(getContext()).load(model.getCreator_pic_URL()).networkPolicy(NetworkPolicy.OFFLINE)
+                        if(model.getCreate_pic_URL()!=null){
+                            Picasso.with(getActivity()).load(model.getCreate_pic_URL()).networkPolicy(NetworkPolicy.OFFLINE)
                                     .fit().centerInside()
                                     .into(viewHolder.userPicture, new Callback() {
                                         @Override
@@ -186,7 +188,7 @@ public class FragmentCommunity extends Fragment implements SwipeRefreshLayout.On
 
                                         @Override
                                         public void onError() {
-                                            Picasso.with(getContext()).load(model.getCreator_pic_URL())
+                                            Picasso.with(getActivity()).load(model.getCreate_pic_URL())
                                                     .fit().centerInside().into(viewHolder.userPicture);
 
                                         }
@@ -195,6 +197,7 @@ public class FragmentCommunity extends Fragment implements SwipeRefreshLayout.On
                         }else {
                             viewHolder.userPicture.setImageDrawable(getResources().getDrawable(R.drawable.com_facebook_profile_picture_blank_square));
                         }
+
 
 
 
@@ -210,9 +213,9 @@ public class FragmentCommunity extends Fragment implements SwipeRefreshLayout.On
                             DateFormat formatter = new SimpleDateFormat("HH:mm");
                             String dateFormatted = formatter.format(date);
 
-                           // CheckTimeStamp checkTimeStamp= new CheckTimeStamp(getActivity(),model.getPrivateContent().getTimeofCreation());
+                           final CheckTimeStamp checkTimeStamp= new CheckTimeStamp(getActivity(),model.getTimeofCreation());
 
-                           // viewHolder.time.setText(checkTimeStamp.checktime());
+                            viewHolder.time.setText(checkTimeStamp.checktime());
 
 
 
@@ -227,6 +230,27 @@ public class FragmentCommunity extends Fragment implements SwipeRefreshLayout.On
                                 @Override
                                 public void onClick(View view) {
 
+                                    popupMenu=new PopupMenu(getActivity(),viewHolder.button_edit);
+                                    popupMenu.getMenuInflater().inflate(R.menu.menu_community_pop_up,popupMenu.getMenu());
+                                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                                        @Override
+                                        public boolean onMenuItemClick(MenuItem item) {
+                                            if (item.getItemId()==R.id.action_edit_post){
+                                                //edit post
+                                                return true;
+                                            }
+                                            if (item.getItemId()==R.id.action_delete_post){
+
+                                                DatabaseReference refPost= FirebaseDatabase.getInstance().getReference()
+                                                        .child("Posts")
+                                                        .child(model.getPostUniqueId());
+                                                refPost.setValue(null);
+                                                return true;
+                                            }
+                                            return false;
+                                        }
+                                    });
+                                    popupMenu.show();
 
                                 }
                             });
