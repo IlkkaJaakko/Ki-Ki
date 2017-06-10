@@ -84,6 +84,7 @@ import java.util.concurrent.TimeUnit;
  * A simple {@link Fragment} subclass.
  * Use the {@link FragmentHome#newInstance} factory method to
  * create an instance of this fragment.
+ * the Fitness API should be implemented here to show daily step recording and hydration recording and also return daily data
  */
 public class FragmentHome extends Fragment implements  View.OnClickListener {
 
@@ -177,4 +178,6 @@ public class FragmentHome extends Fragment implements  View.OnClickListener {
                 break;
         }
     }
+
+
 }
