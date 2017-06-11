@@ -15,14 +15,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "880040703155-06vlu6k0lfgopvcj8rbgver6ept6l484.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.bricenangue.insyconn.ki_ki",
-            "certificate_hash": "881b425908aacfff27e4c3eac32663f5de08d1d9"
-          }
-        },
-        {
           "client_id": "880040703155-q9i9v2c7v5rg5cue0mgcdd83vmot6e9u.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -37,13 +29,8 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "880040703155-q9i9v2c7v5rg5cue0mgcdd83vmot6e9u.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2

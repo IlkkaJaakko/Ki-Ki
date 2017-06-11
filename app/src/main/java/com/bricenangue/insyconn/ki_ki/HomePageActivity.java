@@ -71,7 +71,7 @@ import com.google.android.gms.fitness.data.Field;
 import java.util.concurrent.TimeUnit;
 
 
-public class HomePageActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
+public class HomePageActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, ConnectionCallbacks {
 
     private static final String SELECTED_ITEM = "arg_selected_item";
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 24;
@@ -142,13 +142,33 @@ public class HomePageActivity extends AppCompatActivity implements GoogleApiClie
     }
 
 
-
+    public static GoogleApiClient googleFitBuild(Activity activity, GoogleApiClient.ConnectionCallbacks connectionCallbacks, GoogleApiClient.OnConnectionFailedListener failedListener){
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                //.requestServerAuthCode(activity.getString(R.string.server_client_id), false)
+                .requestEmail()
+                .requestScopes(new Scope(Scopes.FITNESS_ACTIVITY_READ_WRITE), new Scope(Scopes.FITNESS_BODY_READ_WRITE),
+                        new Scope(Scopes.FITNESS_NUTRITION_READ_WRITE), new Scope(Scopes.FITNESS_LOCATION_READ_WRITE))
+                .build();
+        return new GoogleApiClient.Builder(activity)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .addConnectionCallbacks(connectionCallbacks)
+                .addOnConnectionFailedListener(failedListener)
+                //.addApi(Plus.API)
+                .addApi(Fitness.CONFIG_API)
+                .addApi(Fitness.HISTORY_API)
+                .addApi(Fitness.SESSIONS_API)
+                .addApi(Fitness.RECORDING_API)
+                .addApi(Fitness.BLE_API)
+                .addApi(Fitness.SENSORS_API)
+                .build();
+    }
 
 
 
     @Override
     protected void onStart() {
         super.onStart();
+        mGoogleApiClient = googleFitBuild(this,this,this);
     }
 
     @Override
@@ -180,6 +200,7 @@ public class HomePageActivity extends AppCompatActivity implements GoogleApiClie
 
         switch (item.getItemId()) {
             case R.id.navigation_home:
+               // readData();
                 selectedFragment=FragmentHome.newInstance();
                 break;
             case R.id.navigation_community:
@@ -229,7 +250,6 @@ public class HomePageActivity extends AppCompatActivity implements GoogleApiClie
     }
 
     private void loggout() {
-
         final AlertDialog alertDialog =
                 new AlertDialog.Builder(HomePageActivity.this)
                         .setIcon(getResources().getDrawable(R.drawable.ic_power_settings_new_black_24dp))
@@ -384,6 +404,18 @@ public class HomePageActivity extends AppCompatActivity implements GoogleApiClie
         }
     }
 
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        Log.i(TAG, "Google API connected");
+
+        Toast.makeText(getApplicationContext(),"connected",Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
 
 
     /**
@@ -443,16 +475,7 @@ public class HomePageActivity extends AppCompatActivity implements GoogleApiClie
                 Log.i(TAG, "User interaction was cancelled.");
             } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission was granted.
-
-
-
-                /**
-                 * call the Fitness API here to start recording and make it available
-                 * to all other fragment and other activities
-                 */
-
-
-
+                mGoogleApiClient = googleFitBuild(this,this,this);
 
             } else {
                 // Permission denied.
@@ -491,11 +514,8 @@ public class HomePageActivity extends AppCompatActivity implements GoogleApiClie
     }
 
 
-    public void ViewFullDietPlanClicked(View view) {
 
-            Toast.makeText(getApplicationContext(),"view full diet plan",Toast.LENGTH_SHORT).show();
 
-    }
 }
 
 
