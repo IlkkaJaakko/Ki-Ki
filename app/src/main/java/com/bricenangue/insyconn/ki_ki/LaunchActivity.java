@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.bricenangue.insyconn.ki_ki.activity.FitnessActivity;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -230,7 +231,7 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
-        Toast.makeText(getApplicationContext(),connectionResult.getErrorMessage(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),connectionResult.getErrorMessage(),Toast.LENGTH_SHORT).show();
         dismissProgressbar();
     }
 
@@ -502,7 +503,7 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
                         setFirebasePhotoUri(user,urlPicture);
                     }
 
-                    startActivity(new Intent(LaunchActivity.this,HomePageActivity.class)
+                    startActivity(new Intent(LaunchActivity.this,FitnessActivity.class)
                             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                     dismissProgressbar();
                     finish();
@@ -639,7 +640,7 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
 
                     userSharedPreference.setEmailVerified(user.isEmailVerified());
 
-                    startActivity(new Intent(LaunchActivity.this,HomePageActivity.class)
+                    startActivity(new Intent(LaunchActivity.this,FitnessActivity.class)
                             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                     dismissProgressbar();
                     finish();
