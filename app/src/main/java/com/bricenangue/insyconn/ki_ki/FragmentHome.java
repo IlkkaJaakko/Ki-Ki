@@ -25,6 +25,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bricenangue.insyconn.ki_ki.asynctask.FetchCaloriesAsync;
+import com.bricenangue.insyconn.ki_ki.asynctask.FitnessActivity;
 import com.firebase.client.utilities.LogWrapper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
@@ -47,11 +49,16 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
+import static com.facebook.login.widget.ProfilePictureView.TAG;
+import static com.google.android.gms.fitness.data.Field.FIELD_VOLUME;
+import static java.util.concurrent.TimeUnit.SECONDS;
+
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -86,7 +93,7 @@ import java.util.concurrent.TimeUnit;
  * create an instance of this fragment.
  * the Fitness API should be implemented here to show daily step recording and hydration recording and also return daily data
  */
-public class FragmentHome extends Fragment implements  View.OnClickListener {
+public class FragmentHome extends Fragment implements  View.OnClickListener{
 
     private TextView textViewWaterIntake, textViewStepsCount, textViewStepsGoal, textViewStepsDistance
             ,textViewStepstime, textViewStepsCalorieBurned;
@@ -96,6 +103,7 @@ public class FragmentHome extends Fragment implements  View.OnClickListener {
     FirebaseAuth auth;
     DatabaseReference databaseReference;
     UserSharedPreference userSharedPreference;
+    private GoogleApiClient mGoogleApiClient =null;
 
     private View  view;
 
@@ -149,6 +157,10 @@ public class FragmentHome extends Fragment implements  View.OnClickListener {
 
         return view;
     }
+
+
+
+
 
     @Override
     public void onClick(View view) {
