@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.bricenangue.insyconn.ki_ki.CaloriesInterface;
 import com.bricenangue.insyconn.ki_ki.activity.FitnessActivity;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -17,17 +18,18 @@ import com.google.android.gms.fitness.result.DailyTotalResult;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-public class FetchCaloriesAsync extends AsyncTask<Object, Object, ArrayList<Long>> {
+public class FetchCaloriesAsync extends AsyncTask<Object, Object, Float> {
 
     private GoogleApiClient mClient;
+    private CaloriesInterface caloriesInterface;
 
-    public FetchCaloriesAsync(GoogleApiClient client) {
+    public FetchCaloriesAsync(GoogleApiClient client, CaloriesInterface caloriesInterface) {
         mClient = client;
+        this.caloriesInterface = caloriesInterface;
     }
 
 
-    protected ArrayList<Long> doInBackground(Object... params) {
-        ArrayList<Long> mResult = new ArrayList<>();
+    protected Float doInBackground(Object... params) {
         float total = 0;
         PendingResult<DailyTotalResult> result = Fitness.HistoryApi.readDailyTotal(mClient, DataType.TYPE_CALORIES_EXPENDED);
         DailyTotalResult totalResult = result.await(30, TimeUnit.SECONDS);
@@ -44,12 +46,14 @@ public class FetchCaloriesAsync extends AsyncTask<Object, Object, ArrayList<Long
         }
 
 
-        return mResult;
+        return total;
     }
 
 
     @Override
-    protected void onPostExecute(ArrayList<Long> results) {
+    protected void onPostExecute(Float results) {
         super.onPostExecute(results);
+        caloriesInterface.getCalories(results);
+
     }
 }

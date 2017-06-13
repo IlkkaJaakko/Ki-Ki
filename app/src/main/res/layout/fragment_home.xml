@@ -54,18 +54,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_gravity="start"
-                android:text="number of current steps"/>
+                android:layout_gravity="center|start"
+                android:text="2344"
+                android:gravity="end"
+                android:textSize="20sp"
+                android:layout_marginRight="5dp"/>
 
             <TextView
                 android:id="@+id/textView_homeFragment_steps_goal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="/ number total of steps"
-                android:textSize="15sp"
-                android:layout_gravity="center"
-                android:layout_marginRight="10dp"/>
+                android:text="@string/fragment_home_step_counter_default_goal"
+                android:textSize="13sp"
+                android:layout_gravity="center|bottom"
+                android:layout_marginRight="10dp"
+                android:gravity="bottom"/>
 
         </LinearLayout>
 
@@ -123,7 +127,7 @@
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="12 min"
+                    android:text="-- : --"
                     android:textSize="15sp"
                     android:layout_gravity="center"
                     android:layout_marginRight="10dp"/>
@@ -153,7 +157,7 @@
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="120 Kcal"
+                    android:text="@string/fragment_home_diet_plan_kcal_text"
                     android:textSize="15sp"
                     android:layout_gravity="bottom"
                     android:layout_marginRight="10dp"/>
@@ -475,6 +479,17 @@
                 android:tint="@color/tw__blue_default"
                 />
 
+            <TextView
+                android:id="@+id/textView_homeFragment_water_intake_in_liter"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:gravity="center_horizontal"
+                android:textSize="20sp"
+                android:layout_gravity="center"
+
+                />
 
             <LinearLayout
                 android:layout_width="wrap_content"

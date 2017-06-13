@@ -510,7 +510,7 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
                         setFirebasePhotoUri(user,urlPicture);
                     }
 
-                    startActivity(new Intent(LaunchActivity.this,FitnessActivity.class)
+                    startActivity(new Intent(LaunchActivity.this,HomePageActivity.class)
                             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                     dismissProgressbar();
                     finish();

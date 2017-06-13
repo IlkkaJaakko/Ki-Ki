@@ -3,6 +3,7 @@ package com.bricenangue.insyconn.ki_ki.asynctask;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.bricenangue.insyconn.ki_ki.HydrationInterface;
 import com.bricenangue.insyconn.ki_ki.activity.FitnessActivity;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -19,20 +20,24 @@ import static com.google.android.gms.fitness.data.Field.FIELD_VOLUME;
 /**
  * get hydration information
  */
-public class FetchHydrationAsync extends AsyncTask<Void,Void,Void> {
+public class FetchHydrationAsync extends AsyncTask<Void,Void,Float> {
 
     private GoogleApiClient mClient;
+    private HydrationInterface hydrationInterface;
 
-    public FetchHydrationAsync(GoogleApiClient client){
+    public FetchHydrationAsync(GoogleApiClient client, HydrationInterface hydrationInterface){
         mClient = client;
+        this.hydrationInterface=hydrationInterface;
     }
 
     @Override
-    protected Void doInBackground(Void... voids) {
+    protected Float doInBackground(Void... voids) {
         ArrayList<Long> mResult = new ArrayList<>();
         float total = 0;
         PendingResult<DailyTotalResult> result = Fitness.HistoryApi.readDailyTotal(mClient, DataType.AGGREGATE_HYDRATION);
-        DailyTotalResult totalResult = result.await(30, TimeUnit.SECONDS);
+
+        DailyTotalResult totalResult = result.await(1, TimeUnit.SECONDS);
+
         if (totalResult.getStatus().isSuccess()) {
             DataSet totalSet = totalResult.getTotal();
             if (totalSet != null) {
@@ -44,6 +49,13 @@ public class FetchHydrationAsync extends AsyncTask<Void,Void,Void> {
         } else {
             Log.w(FitnessActivity.TAG, "There was a problem getting the calories." + totalResult);
         }
-        return null;
+        return total;
+    }
+
+    @Override
+    protected void onPostExecute(Float hydration) {
+        super.onPostExecute(hydration);
+        hydrationInterface.getHydrationData(hydration);
+
     }
 }

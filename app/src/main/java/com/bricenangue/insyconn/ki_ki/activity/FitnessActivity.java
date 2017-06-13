@@ -12,7 +12,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.bricenangue.insyconn.ki_ki.CaloriesInterface;
+import com.bricenangue.insyconn.ki_ki.HydrationInterface;
 import com.bricenangue.insyconn.ki_ki.R;
+import com.bricenangue.insyconn.ki_ki.StepCounterInterface;
 import com.bricenangue.insyconn.ki_ki.asynctask.FetchCaloriesAsync;
 import com.bricenangue.insyconn.ki_ki.asynctask.FetchHydrationAsync;
 import com.bricenangue.insyconn.ki_ki.asynctask.FetchNutritionAsync;
@@ -148,10 +151,20 @@ public class FitnessActivity extends AppCompatActivity {
         //start here
 
         //get total steps count
-        new FetchStepsCountAsync(mClient).execute();
+        new FetchStepsCountAsync(mClient, getApplicationContext(), new StepCounterInterface() {
+            @Override
+            public void getSteps(long totalDailySteps) {
+
+            }
+        }).execute();
 
         //get calories count
-        new FetchCaloriesAsync(mClient).execute();
+        new FetchCaloriesAsync(mClient, new CaloriesInterface() {
+            @Override
+            public void getCalories(float totalDailySteps) {
+
+            }
+        }).execute();
 
         //save hydration
         DataSource hydrationSource = new DataSource.Builder()
@@ -165,7 +178,12 @@ public class FitnessActivity extends AppCompatActivity {
 
 
         //get hydration data
-        new FetchHydrationAsync(mClient).execute();
+        new FetchHydrationAsync(mClient, new HydrationInterface() {
+            @Override
+            public void getHydrationData(float totalHydration) {
+
+            }
+        }).execute();
 
 
         //save nutrition data

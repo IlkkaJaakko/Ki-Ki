@@ -1,8 +1,12 @@
 package com.bricenangue.insyconn.ki_ki.asynctask;
 
+import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.bricenangue.insyconn.ki_ki.StepCounterInterface;
 import com.bricenangue.insyconn.ki_ki.activity.FitnessActivity;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -15,21 +19,25 @@ import com.google.android.gms.fitness.result.DailyTotalResult;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 
-public class FetchStepsCountAsync extends AsyncTask<Void,Void,Void> {
+public class FetchStepsCountAsync extends AsyncTask<Void,Void,Long> {
 
     private GoogleApiClient mClient;
+    private Context context;
+    private StepCounterInterface stepCounterInterface;
 
 
-    public FetchStepsCountAsync(GoogleApiClient client){
+    public FetchStepsCountAsync(GoogleApiClient client, Context context, StepCounterInterface stepCounterInterface ){
         mClient = client;
+        this.context =context;
+        this.stepCounterInterface = stepCounterInterface;
     }
 
     @Override
-    protected Void doInBackground(Void... voids) {
+    protected Long doInBackground(Void... voids) {
         long total = 0;
 
         PendingResult<DailyTotalResult> result = Fitness.HistoryApi.readDailyTotal(mClient, DataType.TYPE_STEP_COUNT_DELTA);
-        DailyTotalResult totalResult = result.await(30, SECONDS);
+        DailyTotalResult totalResult = result.await(1, SECONDS);
         if (totalResult.getStatus().isSuccess()) {
             DataSet totalSet = totalResult.getTotal();
             total = totalSet.isEmpty()
@@ -41,6 +49,14 @@ public class FetchStepsCountAsync extends AsyncTask<Void,Void,Void> {
 
         Log.i(FitnessActivity.TAG, "Total steps count recorded : " + total);
 
-        return null;
+
+        return total;
+    }
+
+    @Override
+    protected void onPostExecute(Long total) {
+        super.onPostExecute(total);
+        stepCounterInterface.getSteps(total);
+
     }
 }

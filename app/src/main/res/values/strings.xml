@@ -127,6 +127,9 @@
     <string name="imagepicker_title">Choose or Take a picture</string>
     <string name="button_delete">Delete</string>
     <string name="button_edit">Edit</string>
+    <string name="fragment_home_step_counter_default_goal">/ 6000 Steps</string>
+    <string name="fragment_home_diet_plan_kcal_text">Kcal</string>
+    <string name="fragment_home_diet_plan_km_text">Km</string>
 
 
 </resources>
