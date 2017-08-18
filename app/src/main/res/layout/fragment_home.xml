@@ -1,0 +1,509 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/fragmenthome"
+    tools:context="com.bricenangue.insyconn.ki_ki.FragmentHome"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
+        android:gravity="start"
+        android:layout_margin="10dp"
+        android:id="@+id/step_counter_header">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/walk"
+            android:layout_gravity="start"
+            android:layout_marginRight="15dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fragment_home_step_counter"
+            android:gravity="center_horizontal"
+            android:textSize="15sp"
+            android:textStyle="bold"/>
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout_homefragment_step_Counter"
+        android:layout_below="@+id/step_counter_header"
+
+        android:layout_marginBottom="10dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp"
+            android:id="@+id/linearLayout_homefragment_step_Counter_1">
+            <TextView
+                android:id="@+id/textView_homeFragment_steps_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="start"
+                android:text="number of current steps"/>
+
+            <TextView
+                android:id="@+id/textView_homeFragment_steps_goal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="/ number total of steps"
+                android:textSize="15sp"
+                android:layout_gravity="center"
+                android:layout_marginRight="10dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/linearLayout_homefragment_step_Counter_2">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/ic_map_grey600_24dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_gravity="bottom"/>
+                <TextView
+                    android:id="@+id/textView_homeFragment_steps_distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1,5 km"
+                    android:textSize="15sp"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="10dp"/>
+
+                <LinearLayout
+                    android:layout_width="1dp"
+                    android:layout_height="20dp"
+                    android:orientation="vertical"
+                    android:background="@color/black"
+                    android:layout_gravity="bottom|end"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:gravity="center_horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_clock_grey600_24dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_gravity="bottom"/>
+                <TextView
+                    android:id="@+id/textView_homeFragment_steps_duration"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="12 min"
+                    android:textSize="15sp"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="10dp"/>
+
+                <LinearLayout
+                    android:layout_width="1dp"
+                    android:layout_height="20dp"
+                    android:orientation="vertical"
+                    android:background="@color/black"
+                    android:layout_gravity="bottom|end"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:gravity="end">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_fire_grey600_24dp"
+                    android:layout_marginRight="10dp"/>
+                <TextView
+                    android:id="@+id/textView_homeFragment_steps_calories_burned"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="120 Kcal"
+                    android:textSize="15sp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginRight="10dp"/>
+
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:id="@+id/step_counter_separator"
+        android:background="@color/grey_light"
+        android:layout_below="@id/linearLayout_homefragment_step_Counter"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/diet_plan_separator"
+        android:layout_below="@+id/step_counter_separator"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_centerHorizontal="true"
+            android:gravity="start"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:id="@+id/diet_plan_header">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_food_apple_black_18dp"
+                android:layout_gravity="start"
+                android:layout_marginRight="15dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fragment_home_diet_plan"
+                android:gravity="center_horizontal"
+                android:textSize="15sp"
+                android:textStyle="bold"/>
+
+
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fragment_home_diet_plan_summary"
+            android:id="@+id/fragment_home_diet_plan_summary_title"
+            android:layout_below="@+id/diet_plan_header"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/linearLayout_homefragment_diet_plan_2"
+            android:layout_below="@+id/fragment_home_diet_plan_summary_title"
+            android:layout_marginTop="5dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_weight="1"
+               >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_gravity="bottom"
+                    android:text="@string/fragment_home_diet_plan_carb"
+                   />
+                <TextView
+                    android:id="@+id/textView_homeFragment_diet_card_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="145 g"
+                    android:textSize="17sp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginRight="10dp"
+                    android:textStyle="bold"/>
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:gravity="center_horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_gravity="bottom"
+                    android:text="@string/fragment_home_diet_plan_fat"/>
+                <TextView
+                    android:id="@+id/textView_homeFragment_fat_value"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="12 g"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:layout_gravity="bottom"
+                    android:layout_marginRight="10dp"/>
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:gravity="start">
+                <TextView
+                    android:text="@string/fragment_home_diet_plan_protein"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_fire_grey600_24dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_gravity="bottom"/>
+                <TextView
+                    android:id="@+id/textView_homeFragment_protein_value"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="90 g"
+                    android:textSize="17sp"
+                    android:layout_gravity="bottom"
+                    android:textStyle="bold"/>
+
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fragment_home_diet_plan_nect_meal"
+            android:id="@+id/fragment_home_diet_plan_next_meal"
+            android:layout_below="@+id/linearLayout_homefragment_diet_plan_2"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="5dp"/>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_below="@+id/fragment_home_diet_plan_next_meal"
+            android:id="@+id/card_view_next_meal"
+            app:cardCornerRadius="3dp"
+            >
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:paddingTop="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:id="@+id/fragment_home_diet_plan_next_meal_linearyout_title">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Afternoon Snack"
+                            android:layout_weight="2"
+                            android:textStyle="bold"
+                            android:textSize="15sp"
+                            android:id="@+id/fragment_home_diet_plan_next_meal_title"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="250 Kcal"
+                            android:textStyle="bold"
+                            android:textSize="15sp"
+                            android:id="@+id/fragment_home_diet_plan_next_meal_calories"/>
+                    </LinearLayout>
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/fragment_home_diet_plan_next_meal_content"
+                        android:layout_below="@id/fragment_home_diet_plan_next_meal_linearyout_title"
+                        android:textSize="13sp"
+                        android:text="1 banane, 30g peanut"
+                        android:layout_marginTop="10dp"
+                        />
+                </RelativeLayout>
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_check_circle_outline_black_24dp"
+                    android:id="@+id/fragment_home_diet_plan_next_meal_check"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless"
+                    android:tint="@color/colorPrimary"
+                    android:layout_gravity="center_vertical|end"/>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_below="@+id/card_view_next_meal"
+            android:id="@+id/card_view_Ads_banner"
+            android:layout_marginTop="5dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Advertisement comes here"
+                android:gravity="center"/>
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fragment_home_diet_plan_view_full_plan"
+            android:textColor="@color/colorAccent"
+            android:textStyle="italic"
+            android:textSize="18sp"
+            android:gravity="bottom"
+           android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:onClick="ViewFullDietPlanClicked"/>
+
+    </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:id="@+id/diet_plan_separator"
+        android:background="@color/grey_light"
+        android:layout_above="@+id/linearLayout_homefragment_water_intake"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/linearLayout_homefragment_water_intake"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="start"
+            android:layout_margin="10dp">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_water_black_18dp"
+                android:layout_gravity="start"
+                android:layout_marginRight="15dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fragment_home_water_intake"
+                android:gravity="center_horizontal"
+                android:textSize="15sp"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
+            <TextView
+                android:id="@+id/textView_homeFragment_glas_water"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/zero_glas_of_water"
+                android:gravity="center_horizontal"
+                android:textSize="30sp"
+                android:layout_gravity="center"
+                />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_cup_water_grey600_48dp"
+                android:layout_gravity="center"
+                android:layout_marginRight="15dp"
+                android:tint="@color/tw__blue_default"
+                />
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_gravity="end"
+                android:gravity="end"
+                android:layout_weight="1">
+                <ImageButton
+                    android:id="@+id/imageButton_homeFragment_add_water"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_plus_black_36dp"
+                    style="@style/button_round"
+                    android:layout_marginRight="20dp"/>
+
+                <ImageButton
+                    android:id="@+id/imageButton_homeFragment_reduce_water"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_minus_black_36dp"
+                    style="@style/button_round"
+                    android:layout_marginLeft="20dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

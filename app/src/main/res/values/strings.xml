@@ -1,0 +1,132 @@
+<resources>
+    <string name="app_name">Ki-Ki</string>
+    <string name="title_activity_home_page">HomePageActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="button_sing_in_with_email">Email</string>
+
+    <string name="facebook_application_id" translatable="false">305714976550966</string>
+    <string name="facebook_login_protocol_scheme" translatable="false">fb305714976550966</string>
+    <string name="facebook_provider_id" translatable="false">facebook.com</string>
+    <string name="password_provider_id" translatable="false">password</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb305714976550966</string>
+    <string name="facebook_app_id" translatable="false">305714976550966</string>
+    <string name="progress_dialog_disconnecting">Disconnecting...</string>
+    <string name="progress_dialog_connecting">Connecting...</string>
+    <string name="facebook_connection_error">Error while connecting to Facebook</string>
+    <string name="facebook_connection_canceled">The connection to facebook has been cancelled</string>
+    <string name="unable_to_connect_to_server_facebook_error">Error while connection to Facebook server</string>
+    <string name="result_cancel">connection failed</string>
+    <string name="alertDialog_no_internet_connection">Please Check your connection internet</string>
+    <string name="google_firebase_provider_id">google.com</string>
+    <string name="Error_while_updating_user_profile_information">Error while set user profile</string>
+    <string name="problem_while_loading_user_data_not_identify">Identification failed</string>
+    <string name="title_community">Community</string>
+    <string name="title_myKiKi">My Ki-Ki</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="textView_mykiki_mydata">Personal Data</string>
+    <string name="button_weight_text">Weight</string>
+    <string name="button_size_text">Size</string>
+    <string name="button_gender_text">Gender</string>
+    <string name="button_age_text">Age</string>
+    <string name="textView_mykiki_myactivities">Activity Level</string>
+    <string name="textView_mykiki_myactivities_description">Select your current activity level</string>
+    <string name="activities_description_1">Light activity \n 1 to 3 days a week</string>
+    <string name="activities_description_2">Moderate activity \n 3 to 5 days a week</string>
+    <string name="activities_description_3">Heavy activity \n 6 to 7 days a week</string>
+    <string name="activities_description_4">Very heavy activity \n twice a day or more</string>
+    <string name="textView_mykiki_recommended_calories">Recommended daily calorie intake</string>
+    <string name="kilocalories">Kcal</string>
+    <string name="button_logout">Logout</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="alertDialoglogout">Logout the user</string>
+
+    <string name="alertDialogverifyemail_title">Please verify your email address</string>
+    <string name="alertDialogverifyemail_message">Please verify your email address by clicking on the link send at</string>
+    <string name="button_continue">Continue</string>
+
+    <string name="problem_while_loading_user_data">A problem occured while loading your data. Please Make sure you have a stable internet connection then try to log in again</string>
+    <string name="problem_while_loading_user_data_auth_null">You signed out from your last session or did not signed up yet.</string>
+    <string name="problem_while_loading_user_data_verifaction_email_resent">We send you a link to verify your email at</string>
+    <string name="no_internet_app_not_properly_work">Some functions might not work properly</string>
+
+
+    <string name="email_verified_plesase_log_out">Have you verified your email yet but still receive this message?\n
+        \nPlease LOG OUT and then LOG IN back again not to receive this message anymore.\n\n
+        If you continue, you will receive a new verification email.</string>
+
+
+    //LaunchActivity
+
+
+    //HomePageActivity
+    <string name="connection_to_server_not_aviable">Your are offline. Please check your internet connection</string>
+
+
+    //InitialiserActivity
+
+
+    //FragmentHome
+    <string name="fragment_home_step_counter">Daily Step Counter</string>
+    <string name="fragment_home_water_intake">Daily Water Intake</string>
+    <string name="fragment_home_diet_plan">Diet Plan</string>
+    <string name="fragment_home_diet_plan_summary"><u>Today\'s Overview</u></string>
+    <string name="zero_glas_of_water">00</string>
+    <string name="fragment_home_diet_plan_carb">Carb</string>
+    <string name="fragment_home_diet_plan_fat">Fat</string>
+    <string name="fragment_home_diet_plan_protein">Protein</string>
+    <string name="fragment_home_diet_plan_nect_meal"><u>Next Meal</u></string>
+    <string name="fragment_home_diet_plan_view_full_plan">View Full Diet Plan</string>
+
+    //FragmentmyKiki
+    <string name="setAge">Set</string>
+    <string name="isMale">Male</string>
+    <string name="isAFemale">Female</string>
+    <string name="unknown_unsername">Unknown</string>
+    <string name="to_maintain_weight">To Maintain Weight</string>
+    <string name="to_loose_weight">To Loose Weight</string>
+    <string name="settings">Settings</string>
+    <string name="permission_denied_explanation">Permission denied</string>
+    <string name="ok">Ok</string>
+    <string name="permission_rationale">Permission Rational</string>
+
+
+    //CreatePostActivity
+    <string name="create_post_hint_description">What\'s on your mind</string>
+    <string name="create_post_button_text">Post</string>
+
+
+    //FragmentCommunity
+    <string name="fragment_community_btn_like">Like</string>
+    <string name="fragment_community_btn_comment">Comment</string>
+    <string name="Unknown_user">Unknown</string>
+
+    //CheckTimeStamp
+    <string name="today">today</string>
+    <string name="yesterday">yesterday</string>
+    <string name="two_days_ago">two days ago</string>
+    <string name="three_days_ago">3 days ago</string>
+    <string name="four_days_ago">4 days ago</string>
+    <string name="five_days_ago">5 days ago</string>
+    <string name="six_days_ago">6 days ago</string>
+    <string name="a_week_ago">1 week ago</string>
+    <string name="eight_days_ago">8 days ago</string>
+    <string name="nine_days_ago">9 days ago</string>
+    <string name="ten_days_ago">10 days ago</string>
+    <string name="eleven_days_ago">11 days ago</string>
+    <string name="twelve_days_ago">12 days ago</string>
+    <string name="thirteen_days_ago">13 days ago</string>
+    <string name="two_weeks_ago">2 weeks ago</string>
+    <string name="three_weeks_ago">3 weeks ago</string>
+    <string name="one_month_ago">1 month ago</string>
+    <string name="two_months_ago">2 months ago</string>
+    <string name="imagepicker_title">Choose or Take a picture</string>
+    <string name="button_delete">Delete</string>
+    <string name="button_edit">Edit</string>
+
+
+</resources>
