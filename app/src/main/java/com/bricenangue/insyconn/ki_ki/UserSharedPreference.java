@@ -3,6 +3,10 @@ package com.bricenangue.insyconn.ki_ki;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.bricenangue.insyconn.ki_ki.Models.User;
+import com.bricenangue.insyconn.ki_ki.Models.UserPersonalData;
+import com.bricenangue.insyconn.ki_ki.Models.UserPublic;
+
 /**
  * Created by bricenangue on 19/11/2016.
  */

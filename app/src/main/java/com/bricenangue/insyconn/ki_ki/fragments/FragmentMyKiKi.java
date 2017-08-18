@@ -1,19 +1,17 @@
-package com.bricenangue.insyconn.ki_ki;
+package com.bricenangue.insyconn.ki_ki.fragments;
 
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.StringDef;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -22,12 +20,25 @@ import android.widget.DatePicker;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.firebase.client.Firebase;
+import com.bricenangue.insyconn.ki_ki.Models.UserPersonalData;
+import com.bricenangue.insyconn.ki_ki.R;
+import com.bricenangue.insyconn.ki_ki.UserSharedPreference;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.Scopes;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.fitness.Fitness;
+import com.google.android.gms.fitness.data.DataPoint;
+import com.google.android.gms.fitness.data.DataSet;
+import com.google.android.gms.fitness.data.DataSource;
+import com.google.android.gms.fitness.data.DataType;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -42,12 +53,15 @@ import com.squareup.picasso.Picasso;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 
 public class FragmentMyKiKi extends Fragment implements View.OnClickListener
 , MyDialogFragment.UserNameListener, DatePickerDialog.OnDateSetListener{
 
+    public static final String TAG = "GoogleFit";
 
     private Button btn_size, btn_age, btn_gender, btn_weight;
     private TextView username, activities_description, calorie_intake, calorie_loose_weight;
@@ -62,7 +76,7 @@ public class FragmentMyKiKi extends Fragment implements View.OnClickListener
     private UserPersonalData userPersonalData;
     private UserSharedPreference userSharedPreference;
 
-
+    private GoogleApiClient mClient = null;
 
     public FragmentMyKiKi() {
         // Required empty public constructor
@@ -83,6 +97,7 @@ public class FragmentMyKiKi extends Fragment implements View.OnClickListener
             user=auth.getCurrentUser();
         }
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -122,11 +137,83 @@ public class FragmentMyKiKi extends Fragment implements View.OnClickListener
     }
 
 
+
     @Override
     public void onDetach() {
         super.onDetach();
+        if (mClient!=null){
 
+            mClient.stopAutoManage(getActivity());
+            mClient.disconnect();
+        }
     }
+
+
+
+    @Override
+    public void onPause() {
+       
+        super.onPause();
+        if (mClient!=null){
+
+            mClient.stopAutoManage(getActivity());
+            mClient.disconnect();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        if (mClient!=null){
+
+            mClient.stopAutoManage(getActivity());
+            mClient.disconnect();
+        }
+    }
+
+    private void buildFitnessClient() {
+            // Create the Google API Client
+            mClient = new GoogleApiClient.Builder(getContext())
+                    .addApi(Fitness.SENSORS_API)
+                    .addApi(Fitness.RECORDING_API)
+                    .addApi(Fitness.HISTORY_API)
+                    .addApi(Fitness.SESSIONS_API)
+                    .addScope(new Scope(Scopes.FITNESS_BODY_READ_WRITE))
+                    .addScope(new Scope(Scopes.FITNESS_ACTIVITY_READ_WRITE))
+                    .addScope(new Scope(Scopes.FITNESS_NUTRITION_READ_WRITE))
+                    .addScope(new Scope(Scopes.FITNESS_LOCATION_READ_WRITE))
+                    .addConnectionCallbacks(
+                            new GoogleApiClient.ConnectionCallbacks() {
+
+                                @Override
+                                public void onConnected(Bundle bundle) {
+                                    Log.i(TAG, "Connected!!!");
+                                    // Now you can make calls to the Fitness APIs.  What to do?
+                                    // Subscribe to some data sources!
+                                }
+
+                                @Override
+                                public void onConnectionSuspended(int i) {
+                                    // If your connection to the sensor gets lost at some point,
+                                    // you'll be able to determine the reason and react to it here.
+                                    if (i == GoogleApiClient.ConnectionCallbacks.CAUSE_NETWORK_LOST) {
+                                        Log.w(TAG, "Connection lost.  Cause: Network Lost.");
+                                    } else if (i == GoogleApiClient.ConnectionCallbacks.CAUSE_SERVICE_DISCONNECTED) {
+                                        Log.w(TAG, "Connection lost.  Reason: Service Disconnected");
+                                    }
+                                }
+                            }
+                    )
+                    .enableAutoManage(getActivity(),  new GoogleApiClient.OnConnectionFailedListener() {
+                        @Override
+                        public void onConnectionFailed(ConnectionResult result) {
+                            Log.w(TAG, "Google Play services connection failed. Cause: " +
+                                    result.toString());
+                        }
+                    })
+                    .build();
+        }
 
     @Override
     public void onClick(View view) {
@@ -186,11 +273,20 @@ public class FragmentMyKiKi extends Fragment implements View.OnClickListener
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot!=null){
-                            level = dataSnapshot.child("activity_level").getValue(Integer.class);
-                            age = dataSnapshot.child("age").getValue(Integer.class);
-                            gender = dataSnapshot.child("gender").getValue(Boolean.class);
-                            size = dataSnapshot.child("size").getValue(Double.class);
-                            weight = dataSnapshot.child("activity_level").getValue(Double.class);
+                            level = dataSnapshot.child("activity_level").getValue(Integer.class) !=null
+                                    ? dataSnapshot.child("activity_level").getValue(Integer.class): 0;
+
+                            age = dataSnapshot.child("age").getValue(Integer.class) !=null
+                            ? dataSnapshot.child("age").getValue(Integer.class) : 0;
+
+                            gender = dataSnapshot.child("gender").getValue(Boolean.class)!=null
+                                    ? dataSnapshot.child("gender").getValue(Boolean.class) : false;
+
+                            size = dataSnapshot.child("size").getValue(Double.class)!=null
+                                    ? dataSnapshot.child("size").getValue(Integer.class) : 0;
+
+                            weight = dataSnapshot.child("weight").getValue(Double.class)!=null
+                                    ? dataSnapshot.child("weight").getValue(Integer.class) : 0;
 
                             userPersonalData.setActivity_level(level);
                             userPersonalData.setGender(gender);
@@ -198,6 +294,7 @@ public class FragmentMyKiKi extends Fragment implements View.OnClickListener
                             userPersonalData.setWeight(weight);
                             userPersonalData.setSize(size);
 
+                            userSharedPreference.storePersonalData(userPersonalData);
                             setButtonsText(gender,weight,size,age,level);
 
 
@@ -250,6 +347,13 @@ public class FragmentMyKiKi extends Fragment implements View.OnClickListener
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        buildFitnessClient();
+    }
+
+
+    @Override
     public void onStart() {
         super.onStart();
         DatabaseReference refUser= FirebaseDatabase.getInstance().getReference()
@@ -282,25 +386,30 @@ public class FragmentMyKiKi extends Fragment implements View.OnClickListener
         });
         initializedUserdata();
 
+
     }
 
+
     private void loadImage(final String value) {
-        Picasso.with(getContext()).load(value).networkPolicy(NetworkPolicy.OFFLINE)
-                .fit().centerInside()
-                .into(user_profile, new Callback() {
-                    @Override
-                    public void onSuccess() {
+        if (value!=null && !value.isEmpty()){
+            Picasso.with(getContext()).load(value).networkPolicy(NetworkPolicy.OFFLINE)
+                    .fit().centerInside()
+                    .into(user_profile, new Callback() {
+                        @Override
+                        public void onSuccess() {
 
-                    }
+                        }
 
-                    @Override
-                    public void onError() {
-                        Picasso.with(getContext()).load(value)
-                                .fit().centerInside().into(user_profile);
+                        @Override
+                        public void onError() {
+                            Picasso.with(getContext()).load(value)
+                                    .fit().centerInside().into(user_profile);
 
 
-                    }
-                });
+                        }
+                    });
+        }
+
     }
 
     private void markAsSelected(int i){
@@ -478,6 +587,7 @@ public class FragmentMyKiKi extends Fragment implements View.OnClickListener
 
                         weight=picker.getValue();
                         userPersonalData.setWeight((float) weight);
+                        saveUserWeight((float) weight);
                         savePersonalData(userPersonalData);
                         markAsSelected(level);
                     }
@@ -512,6 +622,7 @@ public class FragmentMyKiKi extends Fragment implements View.OnClickListener
 
                         size=picker.getValue();
                         userPersonalData.setSize((float) size);
+                        saveUserHeight((float) size);
                         savePersonalData(userPersonalData);
                         markAsSelected(level);
                     }
@@ -561,5 +672,76 @@ public class FragmentMyKiKi extends Fragment implements View.OnClickListener
         userPersonalData.setAge(age);
         savePersonalData(userPersonalData);
         markAsSelected(level);
+    }
+
+    public  void saveUserHeight(float heightCentimiters) {
+        // to post data
+        float height = heightCentimiters / 100.0f;
+        Calendar cal = Calendar.getInstance();
+        Date now = new Date();
+        cal.setTime(now);
+        long endTime = cal.getTimeInMillis();
+        cal.add(Calendar.DAY_OF_YEAR, -1);
+        long startTime = cal.getTimeInMillis();
+
+        DataSet heightDataSet = createDataForRequest(
+                DataType.TYPE_HEIGHT,    // for height, it would be DataType.TYPE_HEIGHT
+                DataSource.TYPE_RAW,
+                height,                  // weight in kgs
+                startTime,              // start time
+                endTime,                // end time
+                TimeUnit.MILLISECONDS                // Time Unit, for example, TimeUnit.MILLISECONDS
+        );
+
+        PendingResult<Status> heightInsertStatus =
+                Fitness.HistoryApi.insertData(mClient, heightDataSet);
+    }
+
+
+    public  void saveUserWeight(float weight) {
+        // to post data
+        Calendar cal = Calendar.getInstance();
+        Date now = new Date();
+        cal.setTime(now);
+        long endTime = cal.getTimeInMillis();
+        cal.add(Calendar.DAY_OF_YEAR, -1);
+        long startTime = cal.getTimeInMillis();
+
+        DataSet weightDataSet = createDataForRequest(
+                DataType.TYPE_WEIGHT,    // for height, it would be DataType.TYPE_HEIGHT
+                DataSource.TYPE_RAW,
+                weight,                  // weight in kgs
+                startTime,              // start time
+                endTime,                // end time
+                TimeUnit.MILLISECONDS                // Time Unit, for example, TimeUnit.MILLISECONDS
+        );
+
+        PendingResult<Status>  weightInsertStatus =
+                Fitness.HistoryApi.insertData(mClient, weightDataSet);
+    }
+    public DataSet createDataForRequest(DataType dataType,
+                                        int dataSourceType,
+                                        Object values,
+                                        long startTime,
+                                        long endTime,
+                                        TimeUnit timeUnit) {
+        DataSource dataSource = new DataSource.Builder()
+                .setAppPackageName(getContext())
+                .setDataType(dataType)
+                .setType(dataSourceType)
+                .build();
+
+        DataSet dataSet = DataSet.create(dataSource);
+        DataPoint dataPoint = dataSet.createDataPoint().setTimeInterval(startTime, endTime, timeUnit);
+
+        if (values instanceof Integer) {
+            dataPoint = dataPoint.setIntValues((Integer) values);
+        } else {
+            dataPoint = dataPoint.setFloatValues((Float) values);
+        }
+
+        dataSet.add(dataPoint);
+
+        return dataSet;
     }
 }

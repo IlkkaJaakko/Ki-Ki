@@ -1,4 +1,4 @@
-package com.bricenangue.insyconn.ki_ki;
+package com.bricenangue.insyconn.ki_ki.services;
 
 import android.app.Activity;
 import android.content.Context;
@@ -42,7 +42,7 @@ public class ConfigApp {
     static final String FIREBASE_APP_URL_PATH_ALL_CITIES = "CITY_";
 
 
-    static final String FIREBASE_APP_URL_USERS = "Users";
+    public static final String FIREBASE_APP_URL_USERS = "Users";
 
     static final String FIREBASE_APP_URL_CHATS = "Chats";
     static final String FIREBASE_APP_URL_MESSAGES = "Messages";

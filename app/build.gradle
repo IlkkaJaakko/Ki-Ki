@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    buildToolsVersion "26.0.1"
     defaultConfig {
         applicationId "com.bricenangue.insyconn.ki_ki"
         minSdkVersion 16
@@ -33,7 +33,17 @@ android {
         exclude 'META-INF/NOTICE.txt'
 
     }
+    signingConfigs {
+        debug {
+            storeFile file("debug.jks")
+            keyAlias 'key0'
+            keyPassword 'debugdebug'
+            storePassword 'debugdebug'
+        }
+    }
 }
+
+
 
 repositories {
     mavenCentral()
@@ -41,12 +51,15 @@ repositories {
         url 'https://maven.fabric.io/public'
     }
 
+    maven {
+        url 'https://maven.google.com'
+    }
 }
 configurations.all {
     resolutionStrategy {
-        force 'com.android.support:design:25.1.1'
-        force 'com.android.support:support-v4:25.1.1'
-        force 'com.android.support:appcompat-v7:25.1.1'
+        force 'com.android.support:design:25.3.1'
+        force 'com.android.support:support-v4:25.3.1'
+        force 'com.android.support:appcompat-v7:25.3.1'
     }
 }
 dependencies {
@@ -56,26 +69,29 @@ dependencies {
     })
 
 
-    compile 'com.firebaseui:firebase-ui:1.2.0'
-    compile 'com.google.firebase:firebase-core:10.0.1'
-    compile 'com.firebase:firebase-client-android:2.5.2'
+
+    compile 'com.android.support:support-vector-drawable:25.3.1'
+    compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.android.support:support-vector-drawable:25.1.1'
-    compile 'com.google.firebase:firebase-auth:10.0.1'
-    compile 'com.google.android.gms:play-services-auth:10.0.1'
-    compile 'com.google.android.gms:play-services-fitness:10.0.1'
-    compile 'com.facebook.android:facebook-android-sdk:4.14.0'
-    compile 'com.google.firebase:firebase-database:10.0.1'
-    compile 'com.google.firebase:firebase-messaging:10.0.1'
-    compile 'com.google.firebase:firebase-storage:10.0.1'
+    compile 'com.android.support:design:25.3.1'
+    compile 'com.android.support:support-vector-drawable:25.3.1'
     compile 'com.android.support:support-v4:25.3.1'
+    compile 'com.firebaseui:firebase-ui:1.2.0'
+    compile 'com.google.firebase:firebase-core:11.0.1'
+    compile 'com.firebase:firebase-client-android:2.5.2'
+    compile 'com.google.firebase:firebase-auth:10.2.4'
+    compile 'com.google.android.gms:play-services:11.0.1'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.facebook.android:facebook-android-sdk:4.14.0'
+    compile 'com.facebook.android:account-kit-sdk:4.25.0'
+    compile 'com.google.firebase:firebase-database:11.0.1'
+    compile 'com.google.firebase:firebase-messaging:11.0.1'
+    compile 'com.google.firebase:firebase-storage:11.0.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.github.Mariovc:ImagePicker:1.0.4'
     compile 'com.github.lopspower:CircularImageView:3.0.0'
-    compile 'com.android.support:multidex:1.0.0'
+    compile 'com.android.support:multidex:1.0.1'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
-    compile 'com.github.Mariovc:ImagePicker:1.0.4'
-
     testCompile 'junit:junit:4.12'
 }
 apply plugin: 'com.google.gms.google-services'

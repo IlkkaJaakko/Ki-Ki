@@ -5,13 +5,18 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="button_sing_in_with_email">Email</string>
+    <string name="banner_ad_mob_id">ca-app-pub-1444653606497319/3493740034</string>
+    <string name="native_ad_mob_id">ca-app-pub-1444653606497319/2164168889</string>
+    <string name="app_ad_mob_id">ca-app-pub-1444653606497319~8350303280</string>
 
     <string name="facebook_application_id" translatable="false">305714976550966</string>
     <string name="facebook_login_protocol_scheme" translatable="false">fb305714976550966</string>
+    <string name="ak_login_protocol_scheme" translatable="false">ak305714976550966</string>
     <string name="facebook_provider_id" translatable="false">facebook.com</string>
     <string name="password_provider_id" translatable="false">password</string>
     <string name="fb_login_protocol_scheme" translatable="false">fb305714976550966</string>
     <string name="facebook_app_id" translatable="false">305714976550966</string>
+    <string name="account_kit_client_token">466d0e02330e964728df9cc89f69a73e</string>
     <string name="progress_dialog_disconnecting">Disconnecting...</string>
     <string name="progress_dialog_connecting">Connecting...</string>
     <string name="facebook_connection_error">Error while connecting to Facebook</string>
@@ -127,6 +132,19 @@
     <string name="imagepicker_title">Choose or Take a picture</string>
     <string name="button_delete">Delete</string>
     <string name="button_edit">Edit</string>
+    <string name="fragment_home_step_counter_default_goal">/ 6000 Steps</string>
+    <string name="fragment_home_diet_plan_kcal_text">Kcal</string>
+    <string name="fragment_home_diet_plan_km_text">Km</string>
+    <string name="textView_splash_activity">More Than A Lifestyle</string>
+    <string name="button_to_portal">Ki-Ki Platform</string>
+    <string name="button_sing_in_with_phone">Phone</string>
+    //DietPLanActivity
+    <string name="title_activity_diet_plan">Eat Healthy</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="Dietplan_tab_TODAY">Today</string>
+    <string name="Dietplan_tab_TOMORROW">Tomorrow</string>
+    <string name="Dietplan_tab_WEEK">Week</string>
 
 
 </resources>

@@ -1,4 +1,4 @@
-package com.bricenangue.insyconn.ki_ki;
+package com.bricenangue.insyconn.ki_ki.services;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;

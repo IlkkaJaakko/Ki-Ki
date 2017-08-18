@@ -1,4 +1,4 @@
-package com.bricenangue.insyconn.ki_ki;
+package com.bricenangue.insyconn.ki_ki.Models;
 
 import java.util.Map;
 

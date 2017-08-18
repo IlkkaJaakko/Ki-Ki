@@ -1,6 +1,5 @@
-package com.bricenangue.insyconn.ki_ki;
+package com.bricenangue.insyconn.ki_ki.activities;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,12 +8,10 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -31,44 +28,35 @@ import android.view.WindowManager;
 
 import android.widget.Toast;
 
+import com.bricenangue.insyconn.ki_ki.BuildConfig;
+import com.bricenangue.insyconn.ki_ki.fragments.FragmentCommunity;
+import com.bricenangue.insyconn.ki_ki.fragments.FragmentHome;
+import com.bricenangue.insyconn.ki_ki.fragments.FragmentMyKiKi;
+import com.bricenangue.insyconn.ki_ki.R;
+import com.bricenangue.insyconn.ki_ki.UserSharedPreference;
 import com.facebook.AccessToken;
 import com.facebook.FacebookRequestError;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
+import com.facebook.accountkit.Account;
+import com.facebook.accountkit.AccountKit;
+import com.facebook.accountkit.AccountKitCallback;
+import com.facebook.accountkit.AccountKitError;
 import com.facebook.login.LoginManager;
 import com.firebase.client.Firebase;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
-import com.google.android.gms.fitness.FitnessStatusCodes;
-import com.google.android.gms.fitness.data.DataPoint;
-import com.google.android.gms.fitness.data.DataSet;
-import com.google.android.gms.fitness.data.DataSource;
-import com.google.android.gms.fitness.data.Value;
-import com.google.android.gms.fitness.request.DataSourcesRequest;
-import com.google.android.gms.fitness.request.OnDataPointListener;
-import com.google.android.gms.fitness.request.SensorRequest;
-import com.google.android.gms.fitness.result.DailyTotalResult;
-import com.google.android.gms.fitness.result.DataSourcesResult;
+import com.google.android.gms.fitness.data.Session;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import android.support.design.widget.Snackbar;
-import com.google.android.gms.common.Scopes;
-import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
-import com.google.android.gms.common.api.Scope;
-
-import com.google.android.gms.fitness.Fitness;
-import com.google.android.gms.fitness.data.DataType;
-import com.google.android.gms.fitness.data.Field;
-
-import java.util.concurrent.TimeUnit;
 
 
 public class HomePageActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, ConnectionCallbacks {
@@ -76,14 +64,16 @@ public class HomePageActivity extends AppCompatActivity implements GoogleApiClie
     private static final String SELECTED_ITEM = "arg_selected_item";
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 24;
 
+    public static final String TAG = "GoogleFit";
+    private GoogleApiClient mClient = null;
+    private Session mSession;
+    private final String SESSION_NAME = "dummy session";
 
     private BottomNavigationView navigation;
     private int mSelectedItem;
-    private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth auth;
     private ProgressDialog progressBar;
     private Fragment selectedFragment= null;
-    private static final String TAG = "HomePageActivity";
 
 
     public boolean haveNetworkConnection() {
@@ -121,7 +111,14 @@ public class HomePageActivity extends AppCompatActivity implements GoogleApiClie
         if (auth != null){
             user =auth.getCurrentUser();
         }
-        
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        mClient = new GoogleApiClient.Builder(this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API,gso)
+                .build();
+        mClient.connect();
 
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -135,9 +132,18 @@ public class HomePageActivity extends AppCompatActivity implements GoogleApiClie
         }
         selectFragment(selectedItem);
 
-        if (!checkPermissions()) {
-            requestPermissions();
-        }
+        AccountKit.getCurrentAccount(new AccountKitCallback<Account>() {
+            @Override
+            public void onSuccess(Account account) {
+
+                Toast.makeText(getApplicationContext(),account.getId(),Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(AccountKitError accountKitError) {
+
+            }
+        });
 
     }
 
@@ -168,12 +174,22 @@ public class HomePageActivity extends AppCompatActivity implements GoogleApiClie
     @Override
     protected void onStart() {
         super.onStart();
+<<<<<<< HEAD:app/src/main/java/com/bricenangue/insyconn/ki_ki/HomePageActivity.java
         mGoogleApiClient = googleFitBuild(this,this,this);
     }
+=======
+>>>>>>> Freelancer_Branch_changed:app/src/main/java/com/bricenangue/insyconn/ki_ki/activities/HomePageActivity.java
 
+    }
     @Override
     protected void onResume() {
         super.onResume();
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
 
     }
 
@@ -200,14 +216,18 @@ public class HomePageActivity extends AppCompatActivity implements GoogleApiClie
 
         switch (item.getItemId()) {
             case R.id.navigation_home:
+<<<<<<< HEAD:app/src/main/java/com/bricenangue/insyconn/ki_ki/HomePageActivity.java
                // readData();
                 selectedFragment=FragmentHome.newInstance();
+=======
+                selectedFragment= FragmentHome.newInstance();
+>>>>>>> Freelancer_Branch_changed:app/src/main/java/com/bricenangue/insyconn/ki_ki/activities/HomePageActivity.java
                 break;
             case R.id.navigation_community:
-                selectedFragment=FragmentCommunity.newInstance();
+                selectedFragment= FragmentCommunity.newInstance();
                 break;
             case R.id.navigation_myKiKi:
-                selectedFragment=FragmentMyKiKi.newInstance();
+                selectedFragment= FragmentMyKiKi.newInstance();
                 break;
         }
 
@@ -305,7 +325,7 @@ public class HomePageActivity extends AppCompatActivity implements GoogleApiClie
                             delPermRequest.executeAsync();
                         } else if (auth.getCurrentUser().getProviderData().get(1).getProviderId()
                                 .equals(getString(R.string.google_firebase_provider_id))
-                                || mGoogleApiClient.isConnected()){
+                                || mClient.isConnected()){
 
                             signOut();
                             revokeAccess();
@@ -345,7 +365,7 @@ public class HomePageActivity extends AppCompatActivity implements GoogleApiClie
         auth.signOut();
 
         // Google sign out
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+        Auth.GoogleSignInApi.signOut(mClient).setResultCallback(
                 new ResultCallback<Status>() {
                     @Override
                     public void onResult(@NonNull Status status) {
@@ -360,7 +380,7 @@ public class HomePageActivity extends AppCompatActivity implements GoogleApiClie
         auth.signOut();
 
         // Google revoke access
-        Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
+        Auth.GoogleSignInApi.revokeAccess(mClient).setResultCallback(
                 new ResultCallback<Status>() {
                     @Override
                     public void onResult(@NonNull Status status) {
@@ -515,7 +535,16 @@ public class HomePageActivity extends AppCompatActivity implements GoogleApiClie
 
 
 
+<<<<<<< HEAD:app/src/main/java/com/bricenangue/insyconn/ki_ki/HomePageActivity.java
 
+=======
+           startActivity(new Intent(this, DietPlanActivity.class)
+           .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+
+    }
+
+
+>>>>>>> Freelancer_Branch_changed:app/src/main/java/com/bricenangue/insyconn/ki_ki/activities/HomePageActivity.java
 }
 
 

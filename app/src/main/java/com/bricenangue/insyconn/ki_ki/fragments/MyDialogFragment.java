@@ -1,4 +1,4 @@
-package com.bricenangue.insyconn.ki_ki;
+package com.bricenangue.insyconn.ki_ki.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -12,6 +12,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.bricenangue.insyconn.ki_ki.R;
+
 /**
  * Created by bricenangue on 01.06.17.
  */
@@ -23,7 +25,7 @@ public class MyDialogFragment extends DialogFragment implements View.OnClickList
 
     @Override
     public void onClick(View view) {
-        if (view.getId()==R.id.male_radio_button){
+        if (view.getId()== R.id.male_radio_button){
             ((UserNameListener)getTargetFragment()).onFinishUserDialog(false);
 
         }else {

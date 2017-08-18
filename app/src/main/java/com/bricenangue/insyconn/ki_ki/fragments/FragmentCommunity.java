@@ -1,12 +1,10 @@
-package com.bricenangue.insyconn.ki_ki;
+package com.bricenangue.insyconn.ki_ki.fragments;
 
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -14,17 +12,21 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bricenangue.insyconn.ki_ki.CheckTimeStamp;
+import com.bricenangue.insyconn.ki_ki.Models.Post;
+import com.bricenangue.insyconn.ki_ki.R;
+import com.bricenangue.insyconn.ki_ki.UserSharedPreference;
+import com.bricenangue.insyconn.ki_ki.activities.CreatePostActivity;
+import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -37,13 +39,9 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
-import java.math.BigDecimal;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 
 /**
@@ -178,6 +176,7 @@ public class FragmentCommunity extends Fragment implements SwipeRefreshLayout.On
                             }
 
                         if(model.getCreate_pic_URL()!=null){
+                            /*
                             Picasso.with(getActivity()).load(model.getCreate_pic_URL()).networkPolicy(NetworkPolicy.OFFLINE)
                                     .fit().centerInside()
                                     .into(viewHolder.userPicture, new Callback() {
@@ -193,6 +192,13 @@ public class FragmentCommunity extends Fragment implements SwipeRefreshLayout.On
 
                                         }
                                     });
+
+                            */
+                            Glide.with(getActivity())
+                                    .load(model.getCreate_pic_URL())
+                                    .asBitmap()
+                                    .fitCenter()
+                                    .into(viewHolder.userPicture);
 
                         }else {
                             viewHolder.userPicture.setImageDrawable(getResources().getDrawable(R.drawable.com_facebook_profile_picture_blank_square));
@@ -282,6 +288,8 @@ public class FragmentCommunity extends Fragment implements SwipeRefreshLayout.On
         private View view;
         private ImageButton button_like,button_edit,button_comment;
         private ImageView userPicture, postPicture;
+        private int MENU_ITEM_VIEW_TYPE =0;
+        private int AD_VIEW_TYPE=1;
 
 
         public PostViewHolder(View itemView) {
@@ -299,6 +307,12 @@ public class FragmentCommunity extends Fragment implements SwipeRefreshLayout.On
             text=(TextView) itemView.findViewById(R.id.fragment_community_card_view_body_text);
             time=(TextView) itemView.findViewById(R.id.fragment_community_card_time);
 
+        }
+    }
+    public class NativeExpressAdViewHolder extends RecyclerView.ViewHolder{
+
+        public NativeExpressAdViewHolder(View itemView) {
+            super(itemView);
         }
     }
 

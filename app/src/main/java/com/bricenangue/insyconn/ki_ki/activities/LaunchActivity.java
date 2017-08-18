@@ -1,4 +1,4 @@
-package com.bricenangue.insyconn.ki_ki;
+package com.bricenangue.insyconn.ki_ki.activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -17,6 +17,11 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.bricenangue.insyconn.ki_ki.BuildConfig;
+import com.bricenangue.insyconn.ki_ki.services.ConfigApp;
+import com.bricenangue.insyconn.ki_ki.Models.UserPublic;
+import com.bricenangue.insyconn.ki_ki.R;
+import com.bricenangue.insyconn.ki_ki.UserSharedPreference;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -25,6 +30,15 @@ import com.facebook.FacebookRequestError;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
+import com.facebook.accountkit.Account;
+import com.facebook.accountkit.AccountKit;
+import com.facebook.accountkit.AccountKitCallback;
+import com.facebook.accountkit.AccountKitError;
+import com.facebook.accountkit.AccountKitLoginResult;
+import com.facebook.accountkit.ui.AccountKitActivity;
+import com.facebook.accountkit.ui.AccountKitConfiguration;
+
+import com.facebook.accountkit.ui.LoginType;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -38,8 +52,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -54,7 +66,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -65,6 +76,7 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
     private static final int RC_SIGN_IN_EMAIL = 101;
     private static final int RC_SIGN_IN_FB = 102;
     private static final int RC_SIGN_IN = 103;
+    private static final int APP_REQUEST_CODE = 1;
     private GoogleApiClient mGoogleApiClient;
     private Button  sigm_in_email;
     private FirebaseAuth auth;
@@ -108,11 +120,15 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
                 .requestEmail()
                 .build();
         mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .addOnConnectionFailedListener(this)
                 .build();
 
 
+        com.facebook.accountkit.AccessToken accessToken = AccountKit.getCurrentAccessToken();
+        if (accessToken !=null){
+            //launchAccountActivity();
+        }
 
         sigm_in_email=(Button)findViewById(R.id.button_sing_in_with_email);
         sign_in_facebook=(LoginButton) findViewById(R.id.button_sign_in_with_facebook);
@@ -151,7 +167,43 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onStart() {
         super.onStart();
-        start();
+        mGoogleApiClient.connect();
+        //start();
+    }
+
+    private void launchAccountActivity() {
+        startActivity(new Intent(LaunchActivity.this,HomePageActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+        dismissProgressbar();
+        finish();
+    }
+
+    private void onLogin(final LoginType loginType){
+         final Intent intent = new Intent(this, AccountKitActivity.class);
+        AccountKitConfiguration.AccountKitConfigurationBuilder configurationBuilder =
+                new AccountKitConfiguration.AccountKitConfigurationBuilder(
+                        loginType,
+                        AccountKitActivity.ResponseType.TOKEN
+                );
+
+        final AccountKitConfiguration configuration = configurationBuilder.build();
+
+        intent.putExtra(AccountKitActivity.ACCOUNT_KIT_ACTIVITY_CONFIGURATION, configuration);
+        startActivityForResult(intent, APP_REQUEST_CODE);
+    }
+
+    public void onPhoneLogin(View view){
+        onLogin(LoginType.PHONE);
+    }
+
+    public void onEmailLogin(View view){
+        onLogin(LoginType.EMAIL);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mGoogleApiClient.disconnect();
     }
 
     private void start() {
@@ -221,7 +273,17 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
         } else if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
-        }else {
+        } else if(requestCode == APP_REQUEST_CODE){
+
+            AccountKitLoginResult loginResult = data.getParcelableExtra(AccountKitLoginResult.RESULT_KEY);
+            if (loginResult.getError() != null){
+                Toast.makeText(getApplicationContext(),
+                        loginResult.getError().getErrorType().getMessage(),Toast.LENGTH_SHORT).show();
+            }else if (loginResult.getAccessToken() !=null){
+
+                loginUserPhone();
+            }
+        } else{
             callbackManager.onActivityResult(requestCode,resultCode,data);
         }
     }
@@ -230,7 +292,7 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
-        Toast.makeText(getApplicationContext(),connectionResult.getErrorMessage(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),connectionResult.getErrorMessage(),Toast.LENGTH_SHORT).show();
         dismissProgressbar();
     }
 
@@ -528,6 +590,118 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
     }
 
 
+    private void procideForPhone(final FirebaseUser user, final String urlPicture) {
+
+
+        final DatabaseReference ref=FirebaseDatabase.getInstance().getReference()
+                .child(ConfigApp.FIREBASE_APP_URL_USERS).
+                        child(user.getUid()).child("userPublic")
+                ;
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot.hasChildren()){
+
+                    /*userSharedPreference.storeUserData(dataSnapshot.getValue(UserPublic.class));
+                    userSharedPreference.setUserLoggedIn(true);
+                    userSharedPreference.setUserDataRefreshed(true);
+                    */
+
+                    if (!dataSnapshot.hasChild("profilePhotoUri")){
+                        ref.child("profilePhotoUri").setValue(urlPicture);
+                        setFirebasePhotoUri(user,urlPicture);
+                    }
+
+                    startActivity(new Intent(LaunchActivity.this,HomePageActivity.class)
+                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                    dismissProgressbar();
+                    finish();
+
+                }else {
+                    dismissProgressbar();
+                    Toast.makeText(getApplicationContext()
+                            ,getString(R.string.problem_while_loading_user_data_not_identify)
+                            ,Toast.LENGTH_LONG).show();
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                dismissProgressbar();
+                Toast.makeText(getApplicationContext(),databaseError.getMessage()
+                        ,Toast.LENGTH_SHORT).show();
+
+            }
+        });
+    }
+
+    private void loginUserPhone() {
+
+        AccountKit.getCurrentAccount(new AccountKitCallback<Account>() {
+            @Override
+            public void onSuccess(Account account) {
+
+                Toast.makeText(getApplicationContext(),account.getId(),Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(AccountKitError accountKitError) {
+
+            }
+        });
+        firebaseUser=auth.getCurrentUser();
+
+        email=firebaseUser.getEmail();
+        uid=firebaseUser.getUid();
+        name = firebaseUser.getDisplayName();
+        onlineSince = System.currentTimeMillis();
+
+        String facebookUserId = firebaseUser.getProviderData().get(1).getUid();
+        final String photoUrl = "https://graph.facebook.com/" + facebookUserId + "/picture?type=large";
+
+        final DatabaseReference referenceUserProfile =FirebaseDatabase.getInstance().getReference()
+                .child(ConfigApp.FIREBASE_APP_URL_USERS)
+                .child(uid);
+
+        final UserPublic userfb=new UserPublic();
+        userfb.setEmail(email);
+        userfb.setName(name);
+        userfb.setUniquefirebasebId(uid);
+        userfb.setOnlineSince(onlineSince);
+        userfb.setProfilePhotoUri(photoUrl);
+
+
+
+        Map<String,Object> children=new HashMap<>();
+
+        setFirebasePhotoUri(firebaseUser,photoUrl);
+        //save user in firebase realtime database
+        final DatabaseReference refUSerPublice=referenceUserProfile.child("userPublic");
+
+        children.put("/email",userfb.getEmail());
+        children.put("/name",userfb.getName());
+        children.put("/uniquefirebasebId",userfb.getUniquefirebasebId());
+        //   children.put("/chatId", FirebaseInstanceId.getInstance().getToken());
+        children.put("/onlineSince", userfb.getOnlineSince());
+        children.put("/profilePhotoUri", userfb.getProfilePhotoUri());
+
+        refUSerPublice.updateChildren(children).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isComplete() && task.isSuccessful()){
+                    procideForFacebook(firebaseUser,photoUrl);
+                }else {
+                    showErrorSignInAndRelaunch(getString(R.string.Error_while_updating_user_profile_information));
+                    dismissProgressbar();
+
+                }
+            }
+        });
+
+    }
 
     private void verifyMail(final FirebaseUser user) {
 
@@ -639,7 +813,7 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
 
                     userSharedPreference.setEmailVerified(user.isEmailVerified());
 
-                    startActivity(new Intent(LaunchActivity.this,HomePageActivity.class)
+                    startActivity(new Intent(LaunchActivity.this,FitnessActivity.class)
                             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                     dismissProgressbar();
                     finish();

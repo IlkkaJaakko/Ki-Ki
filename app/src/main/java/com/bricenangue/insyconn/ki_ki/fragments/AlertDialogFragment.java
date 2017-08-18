@@ -1,4 +1,4 @@
-package com.bricenangue.insyconn.ki_ki;
+package com.bricenangue.insyconn.ki_ki.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

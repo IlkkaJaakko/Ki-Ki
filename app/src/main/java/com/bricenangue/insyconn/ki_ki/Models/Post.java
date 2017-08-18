@@ -1,4 +1,4 @@
-package com.bricenangue.insyconn.ki_ki;
+package com.bricenangue.insyconn.ki_ki.Models;
 
 /**
  * Created by bricenangue on 26/01/2017.
