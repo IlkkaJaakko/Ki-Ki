@@ -1,11 +1,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/fragmenthome"
-    tools:context="com.bricenangue.insyconn.ki_ki.FragmentHome"
-    >
+    tools:context="com.bricenangue.insyconn.ki_ki.fragments.FragmentHome">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_gravity="center|start"
-                android:text="2344"
+                android:text="0"
                 android:gravity="end"
                 android:textSize="20sp"
                 android:layout_marginRight="5dp"/>
@@ -95,7 +95,7 @@
                     android:id="@+id/textView_homeFragment_steps_distance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="1,5 km"
+                    android:text="0 km"
                     android:textSize="15sp"
                     android:layout_gravity="center"
                     android:layout_marginRight="10dp"/>
@@ -245,8 +245,8 @@
                     android:id="@+id/textView_homeFragment_diet_card_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="145 g"
-                    android:textSize="17sp"
+                    android:text=""
+                    android:textSize="15sp"
                     android:layout_gravity="bottom"
                     android:layout_marginRight="10dp"
                     android:textStyle="bold"/>
@@ -272,8 +272,8 @@
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="12 g"
-                    android:textSize="17sp"
+                    android:text=""
+                    android:textSize="15sp"
                     android:textStyle="bold"
                     android:layout_gravity="bottom"
                     android:layout_marginRight="10dp"/>
@@ -300,8 +300,8 @@
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="90 g"
-                    android:textSize="17sp"
+                    android:text=""
+                    android:textSize="15sp"
                     android:layout_gravity="bottom"
                     android:textStyle="bold"/>
 
@@ -328,7 +328,7 @@
             android:layout_below="@+id/fragment_home_diet_plan_next_meal"
             android:id="@+id/card_view_next_meal"
             app:cardCornerRadius="3dp"
-            >
+           >
 
 
             <LinearLayout
@@ -390,20 +390,19 @@
             </LinearLayout>
 
         </android.support.v7.widget.CardView>
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_below="@+id/card_view_next_meal"
-            android:id="@+id/card_view_Ads_banner"
-            android:layout_marginTop="5dp">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Advertisement comes here"
-                android:gravity="center"/>
-        </android.support.v7.widget.CardView>
+
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@+id/textView_homeFragment_view_full_plan"
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/banner_ad_mob_id">
+        </com.google.android.gms.ads.AdView>
 
         <TextView
+            android:id="@+id/textView_homeFragment_view_full_plan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/fragment_home_diet_plan_view_full_plan"
@@ -411,6 +410,7 @@
             android:textStyle="italic"
             android:textSize="18sp"
             android:gravity="bottom"
+            android:layout_marginTop="10dp"
            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="10dp"
